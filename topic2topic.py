@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python 
+# tells environment to use python to run the script
 from threading import Thread
 from queue import Queue
 
-from kafka import KafkaConsumer
-from kafka import KafkaProducer
+from kafka import KafkaConsumer, KafkaProducer
+
 from codecs import getencoder
 from distutils.sysconfig import customize_compiler
 import email
@@ -50,7 +51,7 @@ def read_topic_data():
         print(message)
         data.put(message.value)
 
-def send_data_to_topic():
+def send_data_to_topic(x):
     while True:
         print("starting write thread")
         # sorted_data = sorted(data)
@@ -58,7 +59,7 @@ def send_data_to_topic():
         #     producer1.send(topic_name_output, value=d)
         # producer1.flush()
         # time.sleep(10) # wait for 10 seconds before starting next iteration
-        producer1.send(topic_name_output, value=data.get())
+        producer1.send(x, value=data.get())
         producer1.flush()
 
 # Use threads to concurrently read & write to topics
@@ -67,3 +68,7 @@ if __name__ == "__main__":
     read_thread.start()
     write_thread = Thread(target=send_data_to_topic)
     write_thread.start()
+
+# Commands to run the file
+# chmod u+x topic2topic.py
+# ./topic2topic.py getting_started.ini

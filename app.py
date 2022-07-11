@@ -8,10 +8,10 @@ from unicodedata import name
 from threading import Thread, Event
 from queue import Queue
 from json import dumps
-
+from topic2topic import send_data_to_topic, read_topic_data, bytes_to_int
 from pytz import country_names
 from queue import Queue
-from kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaConsumer
 from helpers import login_required, apology
 import logging
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
@@ -21,6 +21,8 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 import pyodbc
 import pysftp
 import pandas as pd
+
+from topic2topic import read_topic_data, send_data_to_topic
 
 # Configure application
 app = Flask(__name__, template_folder='templates')
@@ -75,6 +77,20 @@ def index():
         customer = cursor.execute(sql).fetchall()
 
         if 'Accept' in request.form: 
+            
+            consumer = KafkaConsumer(
+            "PolicyDraftList",
+            bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'],
+            group_id='my-group',
+            value_deserializer=lambda x: bytes_to_int(x)
+            )
+
+            producer1 = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], value_serializer=lambda x: bytes(x))
+            
+            read_thread = Thread(target=read_topic_data)
+            read_thread.start()
+            write_thread = Thread(target=send_data_to_topic)
+            write_thread.start()
 
             # Variable that stores each customers information to be loaded
             newcustomer='{CustomerId:'^customer[0]^', PolicyTerm:'^customer[1]^', PolicyType:'^customer[2]^', PolicyName:'^customer[3]^', PolicyDescription:'^customer[4]^', PolicyCurrency: HKD'^', PremiumPayment:'^customer[6]^', PremiumStructure:'^customer[7]^', PolicyStatus: Draft'^', CustomerId:'^customer[9]^', CustomerName:'^customer[10]^', Gender:'^customer[10]^', Birthdate:'^customer[11]^', Country:'^customer[12]^'CustomerStatus:customer[13]}'
