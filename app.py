@@ -4,17 +4,19 @@ from multiprocessing import pool
 import os
 import sys
 from unicodedata import name
-from threading import Thread
+from threading import Thread, Event
 from queue import Queue
+from json import dumps
 from confluent_kafka import Consumer, Producer, OFFSET_BEGINNING
-
+from queue import Queue
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
 from helpers import login_required, apology
 import logging
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from threading import Event
 import pyodbc
 import pysftp
 import pandas as pd
@@ -62,32 +64,80 @@ def index():
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
         # METHOD USING SQL
-        sql = f"SELECT * FROM policydraftlist"
+        sql = f"SELECT * FROM policy_list_draft"
         customer = cursor.execute(sql).fetchall()
 
-        # KAFKA STREAM METHOD, cannot connect database. 
-        # consumers = KafkaConsumer(bootstrap_servers=['localhost:9092'], auto_offset_reset='earliest')
-        # consumers.subscribe(['policydraftlist'])
+        # # PRODUCE TO DB
+        # producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'])
+        # with open('inputfile.txt') as f:
+        #     lines = f.readlines()
 
-        # for consumer in consumers:
-        #     print(consumer)
+        # for line in lines:
+        #     producer.send('Policy_Result', json.dumps(line).encode('utf-8'))
+        # # FROM LIST POLICY DRAFT LIST TABLE 
+        # consumer = KafkaConsumer(bootstrap_servers=['localhost:9092'], auto_offset_reset='earliest')
+        # consumer.subscribe(['policydraftlist'])
 
         return render_template("index.html", customer=customer)
     
-#     Posting to the database for buying
+#   Committing to stream for buying
     if request.method == "POST":
-        sql= f"INSERT INTO policydraftlist (customername, policyterm, policytype, email, premiumpayment, premiumstructure, policydescription, policycurrency, policystatus) VALUES " \
-             f"('{request.form.get('name')}', '{request.form.get('term')}', '{request.form.get('type')}', '{session.get('info')[4]}', " \
-             f"'{request.form.get('premiumpayment')}', '{request.form.get('premiumstructure')}', '{request.form.get('desc')}', 'HKD', 'Draft')"
-        results = cursor.execute(sql)
-        
-        cxnx.commit()
-        flash("Bought!")
+        if 'Accept' in request.form: 
+            cname = request.form.get('name')
+            pterm = request.form.get('type')
+            emai = request.form.get('email')
+            pay = request.form.get('premiumpayment')
+            type = request.form.get('type')
+            desc = request.form.get('desc')
+            struc = request.form.get('premiumstructure')
+            status = 'Draft'
+            currency = 'HKD'
+            info = session.get('info')
 
-    cursor.close()
-    cxnx.close()
+            # Variable that stores each customers information to be loaded
+            newcustomer=""
 
-    return render_template("index.html")
+            # Define Producer
+            producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
+            topic_name_output = 'PolicyUWResult'
+
+            while True: 
+                producer.send(topic_name_output, value=newcustomer)
+                producer.flush()
+
+                flash("Approved!")
+                return render_template("index.html")
+
+            
+        elif 'Decline' in request.form: 
+            cname = request.form.get('name')
+            pterm = request.form.get('type')
+            emai = request.form.get('email')
+            pay = request.form.get('premiumpayment')
+            type = request.form.get('type')
+            desc = request.form.get('desc')
+            struc = request.form.get('premiumstructure')
+            status = 'Draft'
+            currency = 'HKD'
+            info = session.get('info')
+            
+            # Variable that stores each customers information to be loaded
+            
+
+            # Define topic name
+            producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
+            topic_name_output = 'PolicyUWResult'
+
+            while True: 
+                producer.send(topic_name_output, value=newcustomer)
+                # Clean and prepare for next entry
+                producer.flush()
+                flash("Declined!")
+
+                return render_template("index.html")
+
+        else: 
+            return apology("Failed Underwriting process.")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
