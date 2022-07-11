@@ -11,8 +11,7 @@ from json import dumps
 
 from pytz import country_names
 from queue import Queue
-from kafka import KafkaProducer
-from kafka import KafkaConsumer
+from kafka import KafkaProducer, KafkaConsumer
 from helpers import login_required, apology
 import logging
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
