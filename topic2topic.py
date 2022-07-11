@@ -1,8 +1,25 @@
+#!/usr/bin/env python
 from threading import Thread
 from queue import Queue
 
-from kafka import KafkaProducer
 from kafka import KafkaConsumer
+from kafka import KafkaProducer
+from codecs import getencoder
+from distutils.sysconfig import customize_compiler
+import email
+from multiprocessing import pool
+import os
+import sys
+from unicodedata import name
+from threading import Thread, Event
+from queue import Queue
+from json import dumps
+
+from pytz import country_names
+from multiprocessing import Queue
+from helpers import login_required, apology
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 # Define the input and output topics
 topic_name_input = "PolicyDraftList"

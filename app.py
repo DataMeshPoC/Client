@@ -64,14 +64,16 @@ def index():
     cursor = cxnx.cursor()
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
-        # METHOD USING SQL
-        sql = f"SELECT * FROM policy_list_draft"
+        sql = f"SELECT * FROM policy_draft_list"
         customer = cursor.execute(sql).fetchall()
 
         return render_template("index.html", customer=customer)
     
 #   Committing to stream for buying
     if request.method == "POST":
+        sql = f"SELECT * FROM policy_draft_list"
+        customer = cursor.execute(sql).fetchall()
+
         if 'Accept' in request.form: 
 
             # Variable that stores each customers information to be loaded
@@ -80,40 +82,26 @@ def index():
             # Define Producer
             producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
             topic_name_output = 'PolicyUWResult'
+            
+            producer.send(topic_name_output, value=newcustomer)
+            producer.flush()
 
-            while True: 
-                producer.send(topic_name_output, value=newcustomer)
-                producer.flush()
-
-                flash("Approved!")
-                return render_template("accepted.html")
+            flash("Approved!")
+            return render_template("accepted.html")
             
         elif 'Decline' in request.form: 
-            cname = request.form.get('name')
-            pterm = request.form.get('type')
-            emai = request.form.get('email')
-            pay = request.form.get('premiumpayment')
-            type = request.form.get('type')
-            desc = request.form.get('desc')
-            struc = request.form.get('premiumstructure')
-            status = 'Draft'
-            currency = 'HKD'
-            info = session.get('info')
             
             # Variable that stores each customers information to be loaded
             newcustomer='{CustomerId:'^customer[0]^', PolicyTerm:'^customer[1]^', PolicyType:'^customer[2]^', PolicyName:'^customer[3]^', PolicyDescription:'^customer[4]^', PolicyCurrency: HKD'^', PremiumPayment:'^customer[6]^', PremiumStructure:'^customer[7]^', PolicyStatus: Draft'^', CustomerId:'^customer[9]^', CustomerName:'^customer[10]^', Gender:'^customer[10]^', Birthdate:'^customer[11]^', Country:'^customer[12]^'CustomerStatus:customer[13]}'
 
-            # Define topic name
+            # Define Producer
             producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
             topic_name_output = 'PolicyUWResult'
+            
+            producer.send(topic_name_output, value=newcustomer)
+            producer.flush()
 
-            while True: 
-                producer.send(topic_name_output, value=newcustomer)
-                # Clean and prepare for next entry
-                producer.flush()
-                flash("Declined!")
-
-                return render_template("declined.html")
+            return render_template("declined.html")
 
         else: 
             return apology("Failed Underwriting process.")
