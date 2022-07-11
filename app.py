@@ -1,3 +1,4 @@
+from codecs import getencoder
 from distutils.sysconfig import customize_compiler
 import email
 from multiprocessing import pool
@@ -7,7 +8,8 @@ from unicodedata import name
 from threading import Thread, Event
 from queue import Queue
 from json import dumps
-from confluent_kafka import Consumer, Producer, OFFSET_BEGINNING
+
+from pytz import country_names
 from queue import Queue
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
@@ -67,35 +69,14 @@ def index():
         sql = f"SELECT * FROM policy_list_draft"
         customer = cursor.execute(sql).fetchall()
 
-        # # PRODUCE TO DB
-        # producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'])
-        # with open('inputfile.txt') as f:
-        #     lines = f.readlines()
-
-        # for line in lines:
-        #     producer.send('Policy_Result', json.dumps(line).encode('utf-8'))
-        # # FROM LIST POLICY DRAFT LIST TABLE 
-        # consumer = KafkaConsumer(bootstrap_servers=['localhost:9092'], auto_offset_reset='earliest')
-        # consumer.subscribe(['policydraftlist'])
-
         return render_template("index.html", customer=customer)
     
 #   Committing to stream for buying
     if request.method == "POST":
         if 'Accept' in request.form: 
-            cname = request.form.get('name')
-            pterm = request.form.get('type')
-            emai = request.form.get('email')
-            pay = request.form.get('premiumpayment')
-            type = request.form.get('type')
-            desc = request.form.get('desc')
-            struc = request.form.get('premiumstructure')
-            status = 'Draft'
-            currency = 'HKD'
-            info = session.get('info')
 
             # Variable that stores each customers information to be loaded
-            newcustomer=""
+            newcustomer='{CustomerId:'^customer[0]^', PolicyTerm:'^customer[1]^', PolicyType:'^customer[2]^', PolicyName:'^customer[3]^', PolicyDescription:'^customer[4]^', PolicyCurrency: HKD'^', PremiumPayment:'^customer[6]^', PremiumStructure:'^customer[7]^', PolicyStatus: Draft'^', CustomerId:'^customer[9]^', CustomerName:'^customer[10]^', Gender:'^customer[10]^', Birthdate:'^customer[11]^', Country:'^customer[12]^'CustomerStatus:customer[13]}'
 
             # Define Producer
             producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
@@ -106,8 +87,7 @@ def index():
                 producer.flush()
 
                 flash("Approved!")
-                return render_template("index.html")
-
+                return render_template("accepted.html")
             
         elif 'Decline' in request.form: 
             cname = request.form.get('name')
@@ -122,7 +102,7 @@ def index():
             info = session.get('info')
             
             # Variable that stores each customers information to be loaded
-            
+            newcustomer='{CustomerId:'^customer[0]^', PolicyTerm:'^customer[1]^', PolicyType:'^customer[2]^', PolicyName:'^customer[3]^', PolicyDescription:'^customer[4]^', PolicyCurrency: HKD'^', PremiumPayment:'^customer[6]^', PremiumStructure:'^customer[7]^', PolicyStatus: Draft'^', CustomerId:'^customer[9]^', CustomerName:'^customer[10]^', Gender:'^customer[10]^', Birthdate:'^customer[11]^', Country:'^customer[12]^'CustomerStatus:customer[13]}'
 
             # Define topic name
             producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
@@ -134,7 +114,7 @@ def index():
                 producer.flush()
                 flash("Declined!")
 
-                return render_template("index.html")
+                return render_template("declined.html")
 
         else: 
             return apology("Failed Underwriting process.")
@@ -179,6 +159,18 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
+
+@app.route("/accepted", methods=["GET", "POST"])
+@login_required
+def accepted():
+    if request.method == "POST":
+        return redirect("/")
+
+@app.route("/", methods=["GET", "POST"])
+@login_required
+def declined():
+    if request.method == "POST":
+        return redirect("/")
 
 def errorhandler(e):
     """Handle error"""
