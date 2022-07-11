@@ -1,1 +1,30 @@
+<!-- This page renders prospective customers, one at a time, for approval -->
+{% extends "layout.html" %}
 
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<main class="container py-5 text-center"
+    <form action="/" method="post"
+        <div class="px-4 py-5 my-5 text-center">
+            <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
+            
+            <div class="col-lg-6 mx-auto">
+            {%for c in customer%}
+                <p> {{ c.name }} </p>
+                <p> {{ c.name }} </p>
+                <p> {{ c.name }} </p>
+                <p> {{ c.name }} </p>
+                <p> {{ c.name }} </p>
+            {%endfor%}
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Accept</button>
+                    <button type="button" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+{% endblock %}
