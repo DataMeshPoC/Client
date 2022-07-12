@@ -1,9 +1,18 @@
-from codecs import getencoder
-from distutils.sysconfig import customize_compiler
-import email
-from multiprocessing import pool
 import os
 import sys
+import subprocess
+import email
+import pyodbc
+import pysftp
+import pandas as pd
+import argparse
+import logging
+import topic2topic
+import stat
+from pathlib import Path
+from multiprocessing import pool
+from codecs import getencoder
+from distutils.sysconfig import customize_compiler
 from unicodedata import name
 from threading import Thread, Event
 from queue import Queue
@@ -13,15 +22,10 @@ from pytz import country_names
 from queue import Queue
 from kafka import KafkaProducer, KafkaConsumer
 from helpers import login_required, apology
-import logging
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-import pyodbc
-import pysftp
-import pandas as pd
-
 from topic2topic import read_topic_data, send_data_to_topic
 
 # Configure application
@@ -57,67 +61,38 @@ def after_request(response):
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-#     renders the users' data and allows them to purchase new policies
-    server = 'hk-mc-fc-data.database.windows.net'
-    database = 'hk-mc-fc-data-training'
-    username = 'server_admin'
-    password = 'Pa$$w0rd'
-    cxnx = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    cursor = cxnx.cursor()
+#   renders the users' data and allows them to purchase new policies
+    # server = 'hk-mc-fc-data.database.windows.net'
+    # database = 'hk-mc-fc-data-training'
+    # username = 'server_admin'
+    # password = 'Pa$$w0rd'
+    # cxnx = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    # cursor = cxnx.cursor()
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
-        sql = f"SELECT * FROM policy_draft_list"
-        customer = cursor.execute(sql).fetchall()
+        consumer = os.chmod("/client/consumer.py", 644)
+        stream = subprocess.call('consumer.main()', stdout='/client/getting_started.ini')
+        # parsed avro stream = customer
+        customer = 
+        # sql = f"SELECT * FROM policy_draft_list"
+        # customer = cursor.execute(sql).fetchall()
 
         return render_template("index.html", customer=customer)
     
 #   Committing to stream for buying
     if request.method == "POST":
-        sql = f"SELECT * FROM policy_draft_list"
-        customer = cursor.execute(sql).fetchall()
-
         if 'Accept' in request.form: 
             
-            consumer = KafkaConsumer(
-            "PolicyDraftList",
-            bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'],
-            group_id='my-group',
-            value_deserializer=lambda x: bytes_to_int(x)
-            )
-
-            producer1 = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], value_serializer=lambda x: bytes(x))
-            
-            read_thread = Thread(target=read_topic_data)
-            read_thread.start()
-            write_thread = Thread(target=send_data_to_topic)
-            write_thread.start()
-
-            # Variable that stores each customers information to be loaded
-            newcustomer='{CustomerId:'^customer[0]^', PolicyTerm:'^customer[1]^', PolicyType:'^customer[2]^', PolicyName:'^customer[3]^', PolicyDescription:'^customer[4]^', PolicyCurrency: HKD'^', PremiumPayment:'^customer[6]^', PremiumStructure:'^customer[7]^', PolicyStatus: Draft'^', CustomerId:'^customer[9]^', CustomerName:'^customer[10]^', Gender:'^customer[10]^', Birthdate:'^customer[11]^', Country:'^customer[12]^'CustomerStatus:customer[13]}'
-
-            # Define Producer
-            producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
-            topic_name_output = 'PolicyUWResult'
-            
-            producer.send(topic_name_output, value=newcustomer)
-            producer.flush()
+            config = os.chmod("/client/topic2topic.py", 644)
+            stream = subprocess.call('consumer.topic2topic()', stdout='/client/getting_started.ini')
 
             flash("Approved!")
             return render_template("accepted.html")
             
         elif 'Decline' in request.form: 
             
-            # Variable that stores each customers information to be loaded
-            newcustomer='{CustomerId:'^customer[0]^', PolicyTerm:'^customer[1]^', PolicyType:'^customer[2]^', PolicyName:'^customer[3]^', PolicyDescription:'^customer[4]^', PolicyCurrency: HKD'^', PremiumPayment:'^customer[6]^', PremiumStructure:'^customer[7]^', PolicyStatus: Draft'^', CustomerId:'^customer[9]^', CustomerName:'^customer[10]^', Gender:'^customer[10]^', Birthdate:'^customer[11]^', Country:'^customer[12]^'CustomerStatus:customer[13]}'
-
-            # Define Producer
-            producer = KafkaProducer(bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], auto_offset_reset='earliest')
-            topic_name_output = 'PolicyUWResult'
-            
-            producer.send(topic_name_output, value=newcustomer)
-            producer.flush()
-
-            return render_template("declined.html")
+            config = os.chmod("/client/topic2topic.py", 644)
+            stream = subprocess.call('consumer.topic2topic()', stdout='/client/getting_started.ini')
 
         else: 
             return apology("Failed Underwriting process.")
@@ -166,12 +141,16 @@ def logout():
 @app.route("/accepted", methods=["GET", "POST"])
 @login_required
 def accepted():
+    if request.method == "GET":
+        return render_template("accepted.html")
     if request.method == "POST":
         return redirect("/")
 
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def declined():
+    if request.method == "GET":
+        return render_template("declined.html")
     if request.method == "POST":
         return redirect("/")
 
