@@ -1,4 +1,5 @@
 #!/usr/bin/env python 
+from multiprocessing.connection import Client
 from kafka import KafkaConsumer, KafkaProducer
 from confluent_kafka import Consumer, KafkaError
 from avro.io import DatumReader, BinaryDecoder
@@ -104,7 +105,7 @@ def main(args):
         schema = "policyuwschema.avsc"
 
     path = os.path.realpath(os.path.dirname(__file__))
-    with open(f"{Client/policydraftlistschema}/avro/{policydraftlistschema}") as f:
+    with open(f"{Client/policyuwschema.avsc}/avro/{policyuwschema.avsc}") as f:
         schema_str = f.read()
 
     sr_conf = {'url': args.schema_registry}
