@@ -54,5 +54,6 @@ if __name__ == '__main__':
 		input("Press Enter to start")
 		main()
 	except Exception:
+		#for debugging
 		print (traceback.format_exc())
 		input("Press return to exit")
