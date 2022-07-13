@@ -99,7 +99,6 @@ def main(args):
     is_specific = args.specific == "true"
 
     schema = "/Client/policydraftlistschema.avsc"
-    
 
     path = os.path.realpath(os.path.dirname(__file__))
     with open(f"{Client/policyuwschema.avsc}/avro/{policyuwschema.avsc}") as f:
