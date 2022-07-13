@@ -75,7 +75,7 @@ def index():
         if 'Accept' in request.form: 
             
             config = os.chmod("/client/topic2topic.py", 644)
-            c = subprocess.call('consumer.topic2topic()', stdout='/client/getting_started.ini')
+            c = subprocess.call('topic2topic.main()', stdout='/client/getting_started.ini')
 
             flash("Approved!")
             return render_template("accepted.html")
@@ -83,7 +83,7 @@ def index():
         elif 'Decline' in request.form: 
             
             config = os.chmod("/client/topic2topic.py", 644)
-            c = subprocess.call('consumer.topic2topic()', stdout='/client/getting_started.ini')
+            c = subprocess.call('topic2topic.main()', stdout='/client/getting_started.ini')
 
         else: 
             return apology("Failed Underwriting process.")
