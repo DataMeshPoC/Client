@@ -100,8 +100,9 @@ def main(args):
 
     schema = "/Client/policydraftlistschema.avsc"
 
+    # SYNTAX ERROR BELOW. 
     path = os.path.realpath(os.path.dirname(__file__))
-    with open(f"{Client/policyuwschema.avsc}/avro/{policyuwschema.avsc}") as f:
+    with open(f"{'/Client/policyuwschema'}/avro/{policyuwschema}") as f:
         schema_str = f.read()
 
     sr_conf = {'url': args.schema_registry}
