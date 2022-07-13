@@ -1,0 +1,7 @@
+# DB CONFIG for index
+    # server = 'hk-mc-fc-data.database.windows.net'
+    # database = 'hk-mc-fc-data-training'
+    # username = 'server_admin'
+    # password = 'Pa$$w0rd'
+    # cxnx = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    # cursor = cxnx.cursor()

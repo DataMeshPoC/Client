@@ -62,20 +62,11 @@ def after_request(response):
 @login_required
 def index():
 #   renders the users' data and allows them to purchase new policies
-    # server = 'hk-mc-fc-data.database.windows.net'
-    # database = 'hk-mc-fc-data-training'
-    # username = 'server_admin'
-    # password = 'Pa$$w0rd'
-    # cxnx = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    # cursor = cxnx.cursor()
+    
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
         consumer = os.chmod("/client/consumer.py", 644)
-        stream = subprocess.call('consumer.main()', stdout='/client/getting_started.ini')
-        # parsed avro stream = customer
-        customer = 
-        # sql = f"SELECT * FROM policy_draft_list"
-        # customer = cursor.execute(sql).fetchall()
+        customer = subprocess.call('consumer.main()', stdout='/client/getting_started.ini')
 
         return render_template("index.html", customer=customer)
     
