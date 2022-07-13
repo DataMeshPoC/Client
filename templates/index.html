@@ -12,7 +12,6 @@
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
             
             <div class="col-lg-6 mx-auto">
-            {%for c in customer%}
                 <p> {{ c.name }} </p>
                 <p> {{ c.email }} </p>
                 <p> {{ c.gender }} </p>
@@ -26,7 +25,6 @@
                 <p> {{ c.premiumpayment }} </p>
                 <p> {{ c.country }} </p>
                 <p> {{ c.policystatus }} </p>
-            {%endfor%}
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                     <button type="button" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" type="submit">Accept</button>
                     <button type="button" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4" type="submit">Decline</button>

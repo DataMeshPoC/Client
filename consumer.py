@@ -98,11 +98,8 @@ def main(args):
     topic = args.topic
     is_specific = args.specific == "true"
 
-    # dont understand
-    if is_specific:
-        schema = "policydraftlistschema.avsc"
-    else:
-        schema = "policyuwschema.avsc"
+    schema = "/Client/policydraftlistschema.avsc"
+    
 
     path = os.path.realpath(os.path.dirname(__file__))
     with open(f"{Client/policyuwschema.avsc}/avro/{policyuwschema.avsc}") as f:

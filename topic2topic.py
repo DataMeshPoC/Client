@@ -20,7 +20,7 @@ topic_name_input = "PolicyDraftList"
 topic_name_output = "PolicyUWResult"
 
 # Define avro schema for parsing
-schema = avro.schema.Parse(open("data_sources/EventRecord.avsc").read())
+schema = avro.schema.Parse(open("Client/policydraftlistschema").read())
 reader = DatumReader(schema)
 
 data = Queue()
