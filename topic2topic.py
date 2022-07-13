@@ -1,51 +1,82 @@
-#!/usr/bin/env python3
-from confluent_avro import AvroKeyValueSerde, SchemaRegistry
-from confluent_avro.schema_registry import HTTPBasicAuth
-import uuid
-import traceback
+#!/usr/bin/env python 
+# tells environment to use python to run the script
+from kafka import KafkaConsumer, KafkaProducer
+from confluent_kafka import Consumer, KafkaError
+from avro.io import DatumReader, BinaryDecoder
+import avro.schema
+from codecs import getencoder
+from distutils.sysconfig import customize_compiler
+import email
+import os
+import sys
+from threading import Thread, Event
+from queue import Queue
+from json import dumps
+from pytz import country_names
+from multiprocessing import Queue, pool
 
-def basic_produce_loop(producer, topics, avroSerde):
-	try:
-		producer.subscribe(topics)
+# Define the input and output topics
+topic_name_input = "PolicyDraftList"
+topic_name_output = "PolicyUWResult"
 
-		while True:
-			msg = producer.poll(10)
-			if msg is None:
-				continue
-			if msg.error():
-				print('Producer error: {}'.format(msg.error()))
-				continue
-			else:
-				v = avroSerde.value.serialize(msg.value())
-				print('Consumed: {}'.format(v))
-	finally:
-		producer.close()
+# Define avro schema for parsing
+schema = avro.schema.Parse(open("Client/policydraftlistschema").read())
+reader = DatumReader(schema)
 
-def main():
-    producer = Producer({
-		'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
-		'security.protocol': 'SASL_SSL',
-		'sasl.mechanisms': 'PLAIN',
-		'sasl.username': 'IHO7XVPCJCCBZAYX',
-		'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
-		'group.id': str(uuid.uuid1()),
-		'auto.offset.reset': 'earliest'
-	})
+data = Queue()
 
-    KAFKA_TOPIC = "PolicyUWResult"
+def bytes_to_int(bytes):
+    result = 0
+    for b in bytes:
+        result = result * 256 + int(b)
+    return result
 
-    registry_client = SchemaRegistry(
-        "https://psrc-gq7pv.westus2.azure.confluent.cloud",
-        HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
-        headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
-    )
+# Configure the consumer to receive data
+consumer = KafkaConsumer(topic_name_input,
+    bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'],
+    auto_offset_reset="earliest",
+    enable_auto_commit=True,
+    group_id="$Default",
+    sasl_mechanism="PLAIN",
+    sasl_plain_username="IHO7XVPCJCCBZAYX",
+    sasl_plain_password="UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE",
+    security_protocol="SASL_SSL",
+    value_deserializer=lambda x: x.decode("latin1"))
 
-    avroSerde = AvroKeyValueSerde(registry_client, KAFKA_TOPIC)
-    
-    basic_produce_loop(producer, ['PolicyDraftList'], avroSerde)
+# Configure the producer to push data to the next topic
+producer1 = KafkaProducer(
+    sasl_mechanism="PLAIN",
+    sasl_plain_username="IHO7XVPCJCCBZAYX",
+    sasl_plain_password="UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE",
+    security_protocol="SASL_SSL",
+    bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], value_serializer=lambda x: bytes(x, encoding='latin1'))
 
-if __name__ == '__main__':
-	try:
-		main()
-	except Exception:
-		print (traceback.format_exc())
+def decode(msg_value):
+    message_bytes = io.BytesIO(msg_value)
+    decoder = BinaryDecoder(message_bytes)
+    event_dict = reader.read(decoder)
+    return event_dict
+
+def read_topic_data():
+    print("received")
+    for message in consumer:
+        mval = message.value()
+        msg = decode(mval)
+        data.put(msg)
+
+def send_data_to_topic():
+    while True:
+        print("starting write thread")
+        producer1.send(topic_name_output, value=data.get())
+        producer1.flush()
+
+# Use thread to concurrently read & write to topics
+if __name__ == "__main__":
+    read_thread = Thread(target=read_topic_data)
+    read_thread.start()
+    write_thread = Thread(target=send_data_to_topic)
+    write_thread.start()
+
+# Commands to run the file
+# chmod u+x topic2topic.py
+# ./topic2topic.py getting_started.ini

@@ -30,7 +30,6 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, ses
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from topic2topic import read_topic_data, send_data_to_topic
 
 # Configure application
 app = Flask(__name__, template_folder='templates')
