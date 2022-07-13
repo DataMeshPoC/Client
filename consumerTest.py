@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import uuid
+import uuid #for debugging
 from confluent_kafka import Consumer, KafkaError, KafkaException
 
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
@@ -8,6 +8,7 @@ from confluent_avro.schema_registry import HTTPBasicAuth
 
 import traceback
 
+#mainly taken from https://docs.confluent.io/kafka-clients/python/current/overview.html#id1
 def basic_consume_loop(consumer, topics, avroSerde):
 	try:
 		consumer.subscribe(topics)
@@ -20,6 +21,7 @@ def basic_consume_loop(consumer, topics, avroSerde):
 				print('Consumer error: {}'.format(msg.error()))
 				continue
 			else:
+				#using avro parser here
 				v = avroSerde.value.deserialize(msg.value())
 				print('Consumed: {}'.format(v))
 	finally:
@@ -37,6 +39,7 @@ def main():
 		'auto.offset.reset': 'earliest'
 	})
 
+	#topic name used by parser
 	KAFKA_TOPIC = "CustomerList"
 
 	registry_client = SchemaRegistry(
