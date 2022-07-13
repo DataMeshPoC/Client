@@ -3,6 +3,7 @@ import sys
 import subprocess
 import email
 import pyodbc
+import consumer
 import pysftp
 import pandas as pd
 import argparse
@@ -20,7 +21,10 @@ from json import dumps
 from topic2topic import send_data_to_topic, read_topic_data, bytes_to_int
 from pytz import country_names
 from queue import Queue
-from kafka import KafkaProducer, KafkaConsumer
+import uuid
+from confluent_kafka import Consumer, KafkaError, KafkaException
+from confluent_avro import AvroKeyValueSerde, SchemaRegistry
+from confluent_avro.schema_registry import HTTPBasicAuth
 from helpers import login_required, apology
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
@@ -66,7 +70,7 @@ def index():
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
         consumer = os.chmod("/client/consumer.py", 644)
-        customer = subprocess.call('consumer.main()', stdout='/client/getting_started.ini')
+        customer = subprocess.call('consumer.main()')
 
         return render_template("index.html", customer=customer)
     
@@ -74,17 +78,17 @@ def index():
     if request.method == "POST":
         if 'Accept' in request.form: 
             
-            config = os.chmod("/client/topic2topic.py", 644)
-            c = subprocess.call('topic2topic.main()', stdout='/client/getting_started.ini')
+            producer = os.chmod("/client/producer.py", 644)
+            customer = subprocess.call('producer.main()')
 
             flash("Approved!")
             return render_template("accepted.html")
             
         elif 'Decline' in request.form: 
             
-            config = os.chmod("/client/topic2topic.py", 644)
-            c = subprocess.call('topic2topic.main()', stdout='/client/getting_started.ini')
-
+            producer = os.chmod("/client/producer.py", 644)
+            customer = subprocess.call('producer.main()')
+            
         else: 
             return apology("Failed Underwriting process.")
 
