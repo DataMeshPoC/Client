@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import uuid #for debugging
+import uuid #for consumer group
 from confluent_kafka import Consumer, KafkaError, KafkaException
 
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
 
+#for debugging
 import traceback
 
 #mainly taken from https://docs.confluent.io/kafka-clients/python/current/overview.html#id1
@@ -35,7 +36,7 @@ def main():
 		'sasl.mechanisms': 'PLAIN',
 		'sasl.username': 'IHO7XVPCJCCBZAYX',
 		'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
-		'group.id': str(uuid.uuid1()),
+		'group.id': str(uuid.uuid1()), #just generating a groupid, can be replaced by a specific one
 		'auto.offset.reset': 'earliest'
 	})
 
