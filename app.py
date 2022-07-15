@@ -65,10 +65,8 @@ def after_request(response):
 @login_required
 def index():
 #   renders the users' data and allows them to purchase new policies
-    
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
-        
         producer = os.chmod("/client/consumer.py", 644)
         customers = str(subprocess.call('consumer.main()'))
         #  make a for loop for each
