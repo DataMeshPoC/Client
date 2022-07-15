@@ -11,7 +11,7 @@ import os
 import sys
 from threading import Thread, Event
 from queue import Queue
-from json import dumps
+from json import dumps, loads
 from pytz import country_names
 from multiprocessing import Queue, pool
 
@@ -61,7 +61,7 @@ def read_topic_data():
     print("received")
     for message in consumer:
         mval = message.value()
-        msg = decode(mval)
+        msg = json.loads(mval)
         data.put(msg)
 
 def send_data_to_topic():
