@@ -51,19 +51,19 @@ producer1 = KafkaProducer(
     security_protocol="SASL_SSL",
     bootstrap_servers=['pkc-epwny.eastus.azure.confluent.cloud:9092'], value_serializer=lambda x: bytes(x, encoding='latin1'))
 
-def decode(msg_value):
-    message_bytes = io.BytesIO(msg_value)
-    decoder = BinaryDecoder(message_bytes)
-    event_dict = reader.read(decoder)
-    return event_dict
+# def decode(msg_value):
+#     message_bytes = io.BytesIO(msg_value)
+#     decoder = BinaryDecoder(message_bytes)
+#     event_dict = reader.read(decoder)
+#     return event_dict
 
-def read_topic_data():
-    print("received")
-    for message in consumer:
-        mval = message.value()
-        # was decoding using the decode function above
-        msg = json.loads(mval)
-        data.put(msg)
+# def read_topic_data():
+#     print("received")
+#     for message in consumer:
+#         mval = message.value()
+#         # was decoding using the decode function above
+#         msg = json.loads(mval)
+#         data.put(msg)
 
 def send_data_to_topic():
     while True:
@@ -73,8 +73,8 @@ def send_data_to_topic():
 
 # Use thread to concurrently read & write to topics
 if __name__ == "__main__":
-    read_thread = Thread(target=read_topic_data)
-    read_thread.start()
+    # read_thread = Thread(target=read_topic_data)
+    # read_thread.start()
     write_thread = Thread(target=send_data_to_topic)
     write_thread.start()
 

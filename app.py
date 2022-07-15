@@ -69,8 +69,8 @@ def index():
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
         
-        producer = os.chmod("/client/topic2topic.py", 644)
-        customers = str(subprocess.call('topic2topic.main()'))
+        producer = os.chmod("/client/consumer.py", 644)
+        customers = str(subprocess.call('consumer.main()'))
         #  make a for loop for each
         DOBS = customers.get("DOB")
         POLICYTERM = customers.get("POLICYTERM")
@@ -96,6 +96,8 @@ def index():
     if request.method == "POST":
         if 'Accept' in request.form: 
 
+            # cannot produce
+            
             producer = os.chmod("/client/topic2topic.py", 644)
             customer = subprocess.call('topic2topic.main()')
 
