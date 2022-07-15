@@ -1,9 +1,11 @@
 import os
 import sys
+import pathlib
 import subprocess
 import email
 import pyodbc
-import consumer
+import Consumer
+import producer1
 import numpy as np 
 import pysftp
 import pandas as pd
@@ -18,7 +20,6 @@ from unicodedata import name
 from threading import Thread, Event
 from queue import Queue
 from json import dumps
-from topic2topic import send_data_to_topic, read_topic_data, bytes_to_int
 from pytz import country_names
 from queue import Queue
 import uuid
@@ -67,8 +68,8 @@ def index():
 #   renders the users' data and allows them to purchase new policies
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
-        producer = os.chmod("/client/consumer.py", 644)
-        customers = str(subprocess.call('consumer.main()'))
+        customer = os.system('python Consumer.py')
+
         #  make a for loop for each
         DOBS = str(customers.get("DOB")).split("\n")
         POLICYTERM = str(customers.get("POLICYTERM")).split("\n")

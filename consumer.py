@@ -4,6 +4,7 @@ import uuid
 from confluent_kafka import Consumer, KafkaError, KafkaException
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
+import sys
 
 import traceback
 
@@ -20,17 +21,14 @@ def basic_consume_loop(consumer, topics, avroSerde):
 				continue
 			else:
 				v = avroSerde.value.deserialize(msg.value())
-				date = str((v.get("DOB")))
-				ind = date.split("\n")
-				for d in ind: 
-					print(d)
+				print('Consumed: {}'.format(v)) and sys.exit()
 
-				# print('Consumed: {}'.format(v))
+				
 	finally:
 		consumer.close()
 
 
-def main():
+def run():
 	consumer = Consumer({
 		'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
 		'security.protocol': 'SASL_SSL',
@@ -54,6 +52,6 @@ def main():
 
 if __name__ == '__main__':
 	try:
-		main()
+		run()
 	except Exception:
 		print (traceback.format_exc())
