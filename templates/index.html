@@ -64,16 +64,16 @@
                 <p> {{ CO.COUNTRY }} </p>
                 {% endfor %}
                 
-                {%for E in EMAIL%}
-                <p> {{ c.EMAIL }} </p>
+                {%for EM in EMAIL%}
+                <p> {{ EM.EMAIL }} </p>
                 {% endfor %}
 
-                {%for E in SMOKING_STATUS%}
-                <p> {{ c.SMOKING_STATUS }} </p>
+                {%for SMT in SMOKING_STATUS%}
+                <p> {{ ST.SMOKING_STATUS }} </p>
                 {% endfor %}
 
-                {%for E in CUSTOMER_STATUS%}
-                <p> {{ c.CUSTOMER_STATUS }} </p>
+                {%for CT in CUSTOMER_STATUS%}
+                <p> {{ CT.CUSTOMER_STATUS }} </p>
                 {% endfor %}
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                     <button type="button" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" type="submit">Accept</button>
