@@ -20,7 +20,9 @@ def basic_consume_loop(consumer, topics, avroSerde):
 				continue
 			else:
 				v = avroSerde.value.deserialize(msg.value())
-				print('Consumed: {}'.format(v))
+				date = str((v.get("DOB")))
+
+				# print('Consumed: {}'.format(v))
 	finally:
 		consumer.close()
 
@@ -46,7 +48,6 @@ def main():
 	avroSerde = AvroKeyValueSerde(registry_client, KAFKA_TOPIC)
 
 	basic_consume_loop(consumer, ['PolicyDraftList'], avroSerde)
-
 
 if __name__ == '__main__':
 	try:
