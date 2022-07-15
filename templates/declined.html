@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Accepted
+    Declined
 {% endblock %}
 
 {% block main %}
@@ -11,9 +11,11 @@
     
       <main class="px-3">
         <h1>Application Declined.</h1>
+        <form action="/" method="post"
         <p class="lead">
-          <name="home" id="home" class="btn btn-lg btn-secondary fw-bold border-white bg-white" type="submit">Declined</a>
+          <button type="submit" name="home" id="home" class="btn btn-lg btn-secondary fw-bold border-black bg-white" >Declined</a>
         </p>
+      </form>
       </main>
     
       <footer class="mt-auto text-white-50">

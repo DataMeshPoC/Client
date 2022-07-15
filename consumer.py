@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from ast import Break
 import uuid
 from confluent_kafka import Consumer, KafkaError, KafkaException
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
@@ -9,10 +10,11 @@ import sys
 import traceback
 
 def basic_consume_loop(consumer, topics, avroSerde):
+	b = True
 	try:
 		consumer.subscribe(topics)
 
-		while True:
+		while b:
 			msg = consumer.poll(10)
 			if msg is None:
 				continue
@@ -21,8 +23,11 @@ def basic_consume_loop(consumer, topics, avroSerde):
 				continue
 			else:
 				v = avroSerde.value.deserialize(msg.value())
-				print('Consumed: {}'.format(v)) and sys.exit()
+				email = v.get('EMAIL')
+				print(email)
 
+				print('Consumed: {}'.format(v))
+				b = False
 				
 	finally:
 		consumer.close()
