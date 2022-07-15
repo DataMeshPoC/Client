@@ -21,6 +21,9 @@ def basic_consume_loop(consumer, topics, avroSerde):
 			else:
 				v = avroSerde.value.deserialize(msg.value())
 				date = str((v.get("DOB")))
+				ind = date.split("\n")
+				for d in ind: 
+					print(d)
 
 				# print('Consumed: {}'.format(v))
 	finally:

@@ -70,23 +70,23 @@ def index():
         producer = os.chmod("/client/consumer.py", 644)
         customers = str(subprocess.call('consumer.main()'))
         #  make a for loop for each
-        DOBS = customers.get("DOB")
-        POLICYTERM = customers.get("POLICYTERM")
-        POLICYTYPE = customers.get("POLICYTYPE")
-        POLICYNAME = customers.get("POLICYNAME")
-        DES = customers.get("POLICYDESCRIPTION")
-        CURRENCY = customers.get("POLICYCURRENCY")
-        PREMIUMPAYMENT = customers.get("PREMIUMPAYMENT")
-        PREMIUMSTRUCTURE = customers.get("PREMIUMSTRUCTURE")
-        PREMIUMDESCRIPTION = customers.get("PREMIUMDESCRIPTION")
-        GENDER = customers.get("GENDER")
-        CUSTOMERNAME = customers.get("CUSTOMERNAME")
-        CUSTOMERID = customers.get("CUSTOMERID")
-        POLICYSTATUS = customers.get("POLICYSTATUS")
-        COUNTRY = customers.get("COUNTRY")
-        EMAIL = customers.get("EMAIL")
-        CUSTOMER_STATUS = customers.get("CUSTOMER_STATUS")
-        SMOKING_STATUS = customers.get("SMOKING_STATUS")
+        DOBS = str(customers.get("DOB")).split("\n")
+        POLICYTERM = str(customers.get("POLICYTERM")).split("\n")
+        POLICYTYPE = str(customers.get("POLICYTYPE")).split("\n")
+        POLICYNAME = str(customers.get("POLICYNAME")).split("\n")
+        DES = str(customers.get("POLICYDESCRIPTION")).split("\n")
+        CURRENCY = str(customers.get("POLICYCURRENCY")).split("\n")
+        PREMIUMPAYMENT = str(customers.get("PREMIUMPAYMENT")).split("\n")
+        PREMIUMSTRUCTURE = str(customers.get("PREMIUMSTRUCTURE")).split("\n")
+        PREMIUMDESCRIPTION = str(customers.get("PREMIUMDESCRIPTION")).split("\n")
+        GENDER = str(customers.get("GENDER")).split("\n")
+        CUSTOMERNAME = str(customers.get("CUSTOMERNAME")).split("\n")
+        CUSTOMERID = str(customers.get("CUSTOMERID")).split("\n")
+        POLICYSTATUS = str(customers.get("POLICYSTATUS")).split("\n")
+        COUNTRY = str(customers.get("COUNTRY")).split("\n")
+        EMAIL = str(customers.get("EMAIL")).split("\n")
+        CUSTOMER_STATUS = str(customers.get("CUSTOMER_STATUS")).split("\n")
+        SMOKING_STATUS = str(customers.get("SMOKING_STATUS")).split("\n")
 
         return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
 
@@ -95,7 +95,6 @@ def index():
         if 'Accept' in request.form: 
 
             # cannot produce
-            
             producer = os.chmod("/client/topic2topic.py", 644)
             customer = subprocess.call('topic2topic.main()')
 
