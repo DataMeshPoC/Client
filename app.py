@@ -4,11 +4,11 @@ import subprocess
 import email
 import pyodbc
 import consumer
+import numpy as np 
 import pysftp
 import pandas as pd
 import argparse
 import logging
-import topic2topic
 import stat
 from pathlib import Path
 from multiprocessing import pool
@@ -69,23 +69,33 @@ def index():
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
         
-        # DB CONFIG for index
-        server = 'hk-mc-fc-data.database.windows.net'
-        database = 'hk-mc-fc-data-training'
-        username = 'server_admin'
-        password = 'Pa$$w0rd'
-        cxnx = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-        cursor = cxnx.cursor()
+        producer = os.chmod("/client/topic2topic.py", 644)
+        customers = str(subprocess.call('topic2topic.main()'))
+        #  make a for loop for each
+        DOBS = customers.get("DOB")
+        POLICYTERM = customers.get("POLICYTERM")
+        POLICYTYPE = customers.get("POLICYTYPE")
+        POLICYNAME = customers.get("POLICYNAME")
+        DES = customers.get("POLICYDESCRIPTION")
+        CURRENCY = customers.get("POLICYCURRENCY")
+        PREMIUMPAYMENT = customers.get("PREMIUMPAYMENT")
+        PREMIUMSTRUCTURE = customers.get("PREMIUMSTRUCTURE")
+        PREMIUMDESCRIPTION = customers.get("PREMIUMDESCRIPTION")
+        GENDER = customers.get("GENDER")
+        CUSTOMERNAME = customers.get("CUSTOMERNAME")
+        CUSTOMERID = customers.get("CUSTOMERID")
+        POLICYSTATUS = customers.get("POLICYSTATUS")
+        COUNTRY = customers.get("COUNTRY")
+        EMAIL = customers.get("EMAIL")
+        CUSTOMER_STATUS = customers.get("CUSTOMER_STATUS")
+        SMOKING_STATUS = customers.get("SMOKING_STATUS")
 
-        sql = f"SELECT * FROM dbo.customers WHERE email = '{session.get('info')[4]}'"
-        myinfo = cursor.execute(sql).fetchone()
+        return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
 
-        return render_template("index.html", customer=customer)
-    
 #   Committing to stream for buying
     if request.method == "POST":
         if 'Accept' in request.form: 
-            
+
             producer = os.chmod("/client/topic2topic.py", 644)
             customer = subprocess.call('topic2topic.main()')
 
