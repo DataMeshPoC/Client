@@ -68,9 +68,18 @@ def index():
     
     # Make sure that the users reached routes via GET 
     if request.method == "GET":
-        consumer = os.chmod("/client/consumer.py", 644)
-        customer = subprocess.call('consumer.main()')
+        
+        # DB CONFIG for index
+        server = 'hk-mc-fc-data.database.windows.net'
+        database = 'hk-mc-fc-data-training'
+        username = 'server_admin'
+        password = 'Pa$$w0rd'
+        cxnx = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = cxnx.cursor()
 
+        sql = f"SELECT * FROM dbo.customers WHERE email = '{session.get('info')[4]}'"
+        myinfo = cursor.execute(sql).fetchone()
+        
         return render_template("index.html", customer=customer)
     
 #   Committing to stream for buying
