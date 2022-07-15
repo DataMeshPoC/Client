@@ -103,19 +103,22 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
-@app.route("/accepted", methods=["GET", "POST"])
+@app.route("/accept", methods=["GET", "POST"])
 @login_required
-def accepted():
-    if request.method == "GET":
-        return render_template("accepted.html")
+def accept():
+    # button is not responsive 
     if request.method == "POST":
-        return redirect("/")
+        print("yes")
+        if 'home' in request.form: 
+            print("no8")
+            return redirect("/")
 
-@app.route("/declined", methods=["GET", "POST"])
+@app.route("/decline", methods=["GET", "POST"])
 @login_required
-def declined():
+def decline():
+    # button is not responsive 
     if request.method == "GET":
-        return render_template("declined.html")
+        return render_template("decline.html")
     if request.method == "POST":
         return redirect("/")
 
@@ -160,15 +163,15 @@ def index():
             print(customers)
             print("done")
             flash("Approved!")
-            return render_template("accepted.html")
+            return render_template("accept.html")
             
-        elif 'Declined' in request.form: 
+        if "Decline" in request.form:
+            customer = os.system('python producer.py')  
+            return render_template("decline.html")
+
+        else:
+            pass
             
-            producer = os.chmod("/client/topic2topic.py", 644)
-            customer = subprocess.call('topic2topic.main()')
-            
-        else: 
-            return apology("Failed Underwriting process.")
 
 def errorhandler(e):
     """Handle error"""

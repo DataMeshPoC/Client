@@ -75,10 +75,10 @@
                 {%for CT in CUSTOMER_STATUS%}
                 <p> {{ CT.CUSTOMER_STATUS }} </p>
                 {% endfor %}
-                <form action="" method="post">
+                <form action="" method="POST">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <button type="submit" name="Accepted" id="Accepted" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
-                    <button type="submit" name="Declined" id="Declined" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
+                    <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
+                    <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
                 </div>
                 </form>
             </div>
