@@ -61,6 +61,7 @@ def read_topic_data():
     print("received")
     for message in consumer:
         mval = message.value()
+        # was decoding using the decode function above
         msg = json.loads(mval)
         data.put(msg)
 
