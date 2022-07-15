@@ -79,23 +79,23 @@ def index():
 
         sql = f"SELECT * FROM dbo.customers WHERE email = '{session.get('info')[4]}'"
         myinfo = cursor.execute(sql).fetchone()
-        
+
         return render_template("index.html", customer=customer)
     
 #   Committing to stream for buying
     if request.method == "POST":
         if 'Accept' in request.form: 
             
-            producer = os.chmod("/client/producer.py", 644)
-            customer = subprocess.call('producer.main()')
+            producer = os.chmod("/client/topic2topic.py", 644)
+            customer = subprocess.call('topic2topic.main()')
 
             flash("Approved!")
             return render_template("accepted.html")
             
         elif 'Decline' in request.form: 
             
-            producer = os.chmod("/client/producer.py", 644)
-            customer = subprocess.call('producer.main()')
+            producer = os.chmod("/client/topic2topic.py", 644)
+            customer = subprocess.call('topic2topic.main()')
             
         else: 
             return apology("Failed Underwriting process.")
