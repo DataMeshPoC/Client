@@ -1,0 +1,88 @@
+{
+  "connect.name": "io.confluent.ksql.avro_schemas.KsqlDataSourceSchema",
+  "fields": [
+    {
+      "default": null,
+      "name": "ID",
+      "type": [
+        "null",
+        "int"
+      ]
+    },
+    {
+      "default": null,
+      "name": "CUSTOMEREMAIL",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "TERM",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "TYPE",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "NAME",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "DESCRIPTION",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "CURRENCY",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "PREMIUMPAYMENT",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "PREMIUMSTRUCTURE",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "STATUS",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "KsqlDataSourceSchema",
+  "namespace": "io.confluent.ksql.avro_schemas",
+  "type": "record"
+}
