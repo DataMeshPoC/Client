@@ -101,37 +101,29 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/")
+    return redirect("/login")
 
-@app.route("/accept", methods=["GET", "POST"])
-@login_required
-def accept():
-    # button is not responsive 
-    if request.method == "POST":
-        print("yes")
-        if 'home' in request.form: 
-            print("no8")
-            return redirect("/")
-
-@app.route("/decline", methods=["GET", "POST"])
-@login_required
-def decline():
-    # button is not responsive 
-    if request.method == "GET":
-        return render_template("decline.html")
-    if request.method == "POST":
-        return redirect("/")
-
-print("index")
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
 #   renders the users' data and allows them to purchase new policies
     # Make sure that the users reached routes via GET 
-    if request.method == "GET":
+    #   Committing to stream for accepting
+    if request.method == "POST":
+        if 'Accept' in request.form: 
+            print("pre?")
+            customers = os.system('python Consumer.py')
+            print(customers)
+            return render_template("accept.html")
+            
+        if 'Decline' in request.form:
+            customer = os.system('python producer.py')  
+            return render_template("decline.html")
+
+    else:
+        flash("Welcome back!")
         myinfo = "new"
-        print("bb")
-        return render_template("index.html",myinfo=myinfo)
+        return render_template("index.html")
         # customers = os.system('python Consumer.py')
         # print(customers)
         # #  make a for loop for each
@@ -154,23 +146,6 @@ def index():
         # SMOKING_STATUS = str(customers.get("SMOKING_STATUS")).split("\n")
         # DOBS = str(customers.get("DOB")).split("\n")
         # return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
-
-#   Committing to stream for accepting
-    if request.method == "POST":
-        if 'Accept' in request.form: 
-            print("pre?")
-            customers = os.system('python Consumer.py')
-            print(customers)
-            print("done")
-            flash("Approved!")
-            return render_template("accept.html")
-            
-        if "Decline" in request.form:
-            customer = os.system('python producer.py')  
-            return render_template("decline.html")
-
-        else:
-            pass
             
 
 def errorhandler(e):
