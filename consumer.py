@@ -2,6 +2,7 @@
 
 from ast import Break
 import uuid
+import sys
 from confluent_kafka import Consumer, KafkaError, KafkaException
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
@@ -10,12 +11,12 @@ import sys
 import traceback
 
 def basic_consume_loop(consumer, topics, avroSerde):
-	b = True
+	running = True
 	try:
 		consumer.subscribe(topics)
 
-		while b:
-			msg = consumer.poll(10)
+		while running:
+			msg = consumer.poll(3)
 			if msg is None:
 				continue
 			if msg.error():
@@ -23,11 +24,8 @@ def basic_consume_loop(consumer, topics, avroSerde):
 				continue
 			else:
 				v = avroSerde.value.deserialize(msg.value())
-				email = v.get('EMAIL')
-				print(email)
-
-				print('Consumed: {}'.format(v))
-				b = False
+				running = False
+				return v
 				
 	finally:
 		consumer.close()
@@ -41,7 +39,7 @@ def run():
 		'sasl.username': 'IHO7XVPCJCCBZAYX',
 		'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
 		'group.id': str(uuid.uuid1()),
-		'auto.offset.reset': 'earliest'
+		'auto.offset.reset': 'latest'
 	})
 
 	KAFKA_TOPIC = "PolicyDraftList"

@@ -55,7 +55,6 @@ def main():
 		PREMIUMSTRUCTURE='premium structure',
 		STATUS='Draft'
 	)
-	#key = dict(CUSTOMERID=123)
 
 	sr = SchemaRegistryClient({
 		"url": "https://psrc-gq7pv.westus2.azure.confluent.cloud",
@@ -84,9 +83,10 @@ def main():
 		})
 
 	producer.produce(topic='Policy', key='', value=message, on_delivery=acked)
-	#producer.flush
 	producer.poll(0)
 	producer.flush()
+
+	producer
 
 
 if __name__ == '__main__':

@@ -13,7 +13,6 @@ import pandas as pd
 import argparse
 import logging
 import stat
-from pypi import execfile
 from pathlib import Path
 from multiprocessing import pool
 from codecs import getencoder
@@ -73,23 +72,25 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        # Remember which user has logged in
-        email = request.form.get("email")
+        if 'login' in request.form: 
+            # Remember which user has logged in
+            print("up")
+            email = request.form.get("email")
 
-        # Ensure username was submitted
-        if not email:
-            return apology("must provide email")
-        
-        # Hardcoded email address- unsure of which table to connect to
-        j = "john@example.com"
-        # Check user
-        if str(email) == j:
-            session['user_id'] = j        
+            # Ensure username was submitted
+            if not email:
+                return apology("must provide email")
+            print("to")
+            # Hardcoded email address- unsure of which table to connect to
+            j = "john@example.com"
+            print("here")
+            # Check user
+            if str(email) == j:
+                session['user_id'] = j  
+                # Redirect user to home page   
+                return redirect("/")   
         else:
             return apology("No account found.")
-    
-        # Redirect user to home page
-        return redirect("/")
 
     # User reached route via GET
     else:
@@ -114,19 +115,18 @@ def index():
     if request.method == "POST":
         if 'Accept' in request.form: 
             print("pre?")
-            customers = execfile('Consumer.py')
+            customers = producer_policy.main()
             print(customers)
             return render_template("accept.html")
             
         if 'Decline' in request.form:
-            customer = os.system('python producer.py')  
+            customer = producer_policy.main()
             return render_template("decline.html")
 
     else:
         flash("Welcome back!")
-        myinfo = "new"
-        return render_template("index.html")
-        # customers = os.system('python Consumer.py')
+        
+        # customers = os.system('python3 Consumer.py')
         # print(customers)
         # #  make a for loop for each
         # POLICYNAME = customers.get("POLICYNAME")
@@ -148,7 +148,7 @@ def index():
         # SMOKING_STATUS = str(customers.get("SMOKING_STATUS")).split("\n")
         # DOBS = str(customers.get("DOB")).split("\n")
         # return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
-            
+        return render_template("index.html")
 
 def errorhandler(e):
     """Handle error"""
