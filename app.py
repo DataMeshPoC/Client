@@ -5,13 +5,15 @@ import subprocess
 import email
 import pyodbc
 import Consumer
-import producer1
+import producer_policy_uw_result
+import producer_policy
 import numpy as np 
 import pysftp
 import pandas as pd
 import argparse
 import logging
 import stat
+from pypi import execfile
 from pathlib import Path
 from multiprocessing import pool
 from codecs import getencoder
@@ -112,7 +114,7 @@ def index():
     if request.method == "POST":
         if 'Accept' in request.form: 
             print("pre?")
-            customers = os.system('python Consumer.py')
+            customers = execfile('Consumer.py')
             print(customers)
             return render_template("accept.html")
             

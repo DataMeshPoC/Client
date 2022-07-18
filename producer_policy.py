@@ -91,8 +91,6 @@ def main():
 
 if __name__ == '__main__':
 	try:
-		input("Press Enter to start")
 		main()
 	except Exception:
 		print (traceback.format_exc())
-		input("Press return to exit")
