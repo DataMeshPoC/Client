@@ -24,9 +24,9 @@ def basic_consume_loop(consumer, topics, avroSerde):
 				continue
 			else:
 				v = avroSerde.value.deserialize(msg.value())
+				print(v["DOB"])
 				running = False
-				return v
-				
+				return v	
 	finally:
 		consumer.close()
 
@@ -39,7 +39,7 @@ def run():
 		'sasl.username': 'IHO7XVPCJCCBZAYX',
 		'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
 		'group.id': str(uuid.uuid1()),
-		'auto.offset.reset': 'latest'
+		'auto.offset.reset': 'earliest'
 	})
 
 	KAFKA_TOPIC = "PolicyDraftList"

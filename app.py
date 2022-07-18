@@ -114,41 +114,58 @@ def index():
     #   Committing to stream for accepting
     if request.method == "POST":
         if 'Accept' in request.form: 
-            print("pre?")
-            customers = producer_policy.main()
-            print(customers)
+            kwargs = {
+            'term': request.form.get('term')+'y',
+            'premiumpayment': request.form.get('premiumpayment'),
+            'email': session.get('info')[4],
+            'premiumstructure': premium_structure,
+            'desc': policy_description,
+            'ctype': request.form.get('ctype'),
+            'name': request.form.get('name'),
+            'cus_id': session.get('info')[0]
+            }
+            prod = producer.main(**kwargs)
+
             return render_template("accept.html")
             
-        if 'Decline' in request.form:
-            customer = producer_policy.main()
+        if 'Decline' in request.form: 
+            kwargs = {
+            'term': request.form.get('term')+'y',
+            'premiumpayment': request.form.get('premiumpayment'),
+            'email': session.get('info')[4],
+            'premiumstructure': premium_structure,
+            'desc': policy_description,
+            'ctype': request.form.get('ctype'),
+            'name': request.form.get('name'),
+            'cus_id': session.get('info')[0]
+            }
+            prod = producer.main(**kwargs)
+            
             return render_template("decline.html")
 
-    else:
-        flash("Welcome back!")
-        
-        # customers = os.system('python3 Consumer.py')
-        # print(customers)
-        # #  make a for loop for each
-        # POLICYNAME = customers.get("POLICYNAME")
-        # POLICYTERM = str(customers.get("POLICYTERM")).split("\n")
-        # POLICYTYPE = str(customers.get("POLICYTYPE")).split("\n")
-        # POLICYNAME = str(customers.get("POLICYNAME")).split("\n")
-        # DES = str(customers.get("POLICYDESCRIPTION")).split("\n")
-        # CURRENCY = str(customers.get("POLICYCURRENCY")).split("\n")
-        # PREMIUMPAYMENT = str(customers.get("PREMIUMPAYMENT")).split("\n")
-        # PREMIUMSTRUCTURE = str(customers.get("PREMIUMSTRUCTURE")).split("\n")
-        # PREMIUMDESCRIPTION = str(customers.get("PREMIUMDESCRIPTION")).split("\n")
-        # GENDER = str(customers.get("GENDER")).split("\n")
-        # CUSTOMERNAME = str(customers.get("CUSTOMERNAME")).split("\n")
-        # CUSTOMERID = str(customers.get("CUSTOMERID")).split("\n")
-        # POLICYSTATUS = str(customers.get("POLICYSTATUS")).split("\n")
-        # COUNTRY = str(customers.get("COUNTRY")).split("\n")
-        # EMAIL = str(customers.get("EMAIL")).split("\n")
-        # CUSTOMER_STATUS = str(customers.get("CUSTOMER_STATUS")).split("\n")
-        # SMOKING_STATUS = str(customers.get("SMOKING_STATUS")).split("\n")
-        # DOBS = str(customers.get("DOB")).split("\n")
-        # return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
-        return render_template("index.html")
+    if request.method == "GET":
+        # consumes the users' data and renders it onto the index page
+
+        v = subprocess.call('python3 consumer.py', shell=True)
+        POLICYNAME = v["POLICYNAME"]
+        POLICYTERM = v["POLICYTERM"]
+        POLICYTYPE = v["POLICYTYPE"]
+        POLICYNAME = v["POLICYNAME"]
+        DES = v["POLICYDESCRIPTION"]
+        CURRENCY = v["POLICYCURRENCY"]
+        PREMIUMPAYMENT = v["PREMIUMPAYMENT"]
+        PREMIUMSTRUCTURE = v["PREMIUMSTRUCTURE"]
+        PREMIUMDESCRIPTION = v["PREMIUMDESCRIPTION"]
+        GENDER = v["GENDER"]
+        CUSTOMERNAME = v["CUSTOMERNAME"]
+        CUSTOMERID = v["CUSTOMERID"]
+        POLICYSTATUS = v["POLICYSTATUS"]
+        COUNTRY = v["COUNTRY"]
+        EMAIL = v["EMAIL"]
+        CUSTOMER_STATUS = v["CUSTOMER_STATUS"]
+        SMOKING_STATUS = v["SMOKING_STATUS"]
+        DOBS = v["DOB"]
+        return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
 
 def errorhandler(e):
     """Handle error"""
