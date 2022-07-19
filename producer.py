@@ -21,7 +21,7 @@ def acked(err, msg):
         print('Produced to: {} [{}] @ {}'.format(msg.topic(), msg.partition(), msg.offset()))
 
 
-def main(accept_value):
+def main(uw_result, status):
 	
 	"""
 	producer = Producer({
@@ -47,15 +47,15 @@ def main(accept_value):
 	# format = yyyy-MM-dd:HH
 
 	message = dict(
-		POLICYTERM=accept_value['term'],
-		POLICYTYPE=accept_value['ctype'],
-		POLICYNAME='life policy 678 20y ',
+		POLICYTERM= uw_result['term'],
+		POLICYTYPE= uw_result['ctype'],
+		POLICYNAME= uw_result['name'],
 		POLICYDESCRIPTION='test description',
 		POLICYCURRENCY='HKD',
 		PREMIUMPAYMENT='monthly',
 		PREMIUMSTRUCTURE='premium structure',
-		POLICYSTATUS='Declined',
-		REASON='smoker',
+		POLICYSTATUS= status['policy_status'],
+		REASON= uw_result['reason'],
 		UWTIME=now.strftime("%Y-%m-%d:%H"),
 		CUSTOMERNAME='Gemma Quinn',
 		GENDER='M',
@@ -63,9 +63,9 @@ def main(accept_value):
 		COUNTRY='Poland',
 		EMAIL='est.ac.mattis@aol.couk',
 		SMOKING_STATUS=True,
-		CUSTOMER_STATUS=True
+		CUSTOMER_STATUS=status['customer_status']
 	)
-	key = 5555
+	key = uw_result['policyid']
 
 	sr = SchemaRegistryClient({
 		"url": "https://psrc-gq7pv.westus2.azure.confluent.cloud",
@@ -89,15 +89,13 @@ def main(accept_value):
 		})
 
 	producer.produce(topic='PolicyUWResult', key=key, value=message, on_delivery=acked)
-	#producer.flush
+
 	producer.poll(0)
 	producer.flush()
 
 
 if __name__ == '__main__':
 	try:
-		input("Press Enter to start")
 		main()
 	except Exception:
 		print (traceback.format_exc())
-		input("Press return to exit")
