@@ -3,6 +3,8 @@ import sys
 import pathlib
 import subprocess
 import email
+import io 
+
 import pyodbc
 import Consumer
 import producer_policy_uw_result
@@ -24,6 +26,8 @@ from json import dumps
 from pytz import country_names
 from queue import Queue
 import uuid
+import avro.schema
+import avro.io
 from confluent_kafka import Consumer, KafkaError, KafkaException
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
@@ -145,28 +149,31 @@ def index():
 
     if request.method == "GET":
         # consumes the users' data and renders it onto the index page
-
-        v = subprocess.call('python3 consumer.py', shell=True)
-        POLICYNAME = v["POLICYNAME"]
-        POLICYTERM = v["POLICYTERM"]
-        POLICYTYPE = v["POLICYTYPE"]
-        POLICYNAME = v["POLICYNAME"]
-        DES = v["POLICYDESCRIPTION"]
-        CURRENCY = v["POLICYCURRENCY"]
-        PREMIUMPAYMENT = v["PREMIUMPAYMENT"]
-        PREMIUMSTRUCTURE = v["PREMIUMSTRUCTURE"]
-        PREMIUMDESCRIPTION = v["PREMIUMDESCRIPTION"]
-        GENDER = v["GENDER"]
-        CUSTOMERNAME = v["CUSTOMERNAME"]
-        CUSTOMERID = v["CUSTOMERID"]
-        POLICYSTATUS = v["POLICYSTATUS"]
-        COUNTRY = v["COUNTRY"]
-        EMAIL = v["EMAIL"]
-        CUSTOMER_STATUS = v["CUSTOMER_STATUS"]
-        SMOKING_STATUS = v["SMOKING_STATUS"]
-        DOBS = v["DOB"]
-        return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMDESCRIPTION=PREMIUMDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
-
+            p = subprocess.run('python3 consumer.py', shell=True, stdout=subprocess.PIPE)
+            v = p.stdout.decode()
+            print(v)
+            POLICYNAME = v
+            print(POLICYNAME)
+            POLICYTERM = v["POLICYTERM"]
+            POLICYTYPE = v["POLICYTYPE"]
+            POLICYNAME = v["POLICYNAME"]
+            DES = v["POLICYDESCRIPTION"]
+            CURRENCY = v["POLICYCURRENCY"]
+            PREMIUMPAYMENT = v["PREMIUMPAYMENT"]
+            PREMIUMSTRUCTURE = v["PREMIUMSTRUCTURE"]
+            PREMIUMDESCRIPTION = v["PREMIUMDESCRIPTION"]
+            GENDER = v["GENDER"]
+            CUSTOMERNAME = v["CUSTOMERNAME"]
+            CUSTOMERID = v["CUSTOMERID"]
+            POLICYSTATUS = v["POLICYSTATUS"]
+            COUNTRY = v["COUNTRY"]
+            EMAIL = v["EMAIL"]
+            CUSTOMER_STATUS = v["CUSTOMER_STATUS"]
+            SMOKING_STATUS = v["SMOKING_STATUS"]
+            DOBS = v["DOB"]
+            return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,POLICYDESCRIPTION=POLICYDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
+            
+            # get rid of the first five bytes
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
