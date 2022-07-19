@@ -47,22 +47,22 @@ def main(uw_result, status):
 	# format = yyyy-MM-dd:HH
 
 	message = dict(
-		POLICYTERM= uw_result['term'],
-		POLICYTYPE= uw_result['ctype'],
-		POLICYNAME= uw_result['name'],
-		POLICYDESCRIPTION='test description',
+		POLICYTERM=uw_result['term'],
+		POLICYTYPE=uw_result['ctype'],
+		POLICYNAME=uw_result['name'],
+		POLICYDESCRIPTION=uw_result['desc'],
 		POLICYCURRENCY='HKD',
-		PREMIUMPAYMENT='monthly',
-		PREMIUMSTRUCTURE='premium structure',
-		POLICYSTATUS= status['policy_status'],
-		REASON= uw_result['reason'],
+		PREMIUMPAYMENT=uw_result['premiumpayment'],
+		PREMIUMSTRUCTURE=uw_result['premiumstructure'],
+		POLICYSTATUS=status['policy_status'],
+		REASON=uw_result['reason'],
 		UWTIME=now.strftime("%Y-%m-%d:%H"),
-		CUSTOMERNAME='Gemma Quinn',
-		GENDER='M',
-		DOB = datetime.date(2000,2,11),
-		COUNTRY='Poland',
-		EMAIL='est.ac.mattis@aol.couk',
-		SMOKING_STATUS=True,
+		CUSTOMERNAME=uw_result['cust_name'],
+		GENDER=uw_result['gender'],
+		DOB =uw_result['dob'],
+		COUNTRY=uw_result['country'],
+		EMAIL=uw_result['email'],
+		SMOKING_STATUS=uw_result['smoking_status'],
 		CUSTOMER_STATUS=status['customer_status']
 	)
 	key = uw_result['policyid']

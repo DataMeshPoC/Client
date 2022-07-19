@@ -1,24 +1,4 @@
-import os
-import sys
-import pathlib
-import subprocess
-import email
-import io 
-import consumer_policydraft_test as c
-import pyodbc
-import producer_policy_uw_result
-import producer_policy
-import numpy as np 
-import pysftp
-import pandas as pd
-import argparse
 import logging
-import stat
-from pathlib import Path
-from multiprocessing import pool
-from codecs import getencoder
-from distutils.sysconfig import customize_compiler
-from unicodedata import name
 from threading import Thread, Event
 from queue import Queue
 from json import dumps
@@ -30,6 +10,7 @@ import avro.io
 import uuid  # for consumer group
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import struct
+import producer
 
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
@@ -44,7 +25,6 @@ from confluent_avro.schema_registry import HTTPBasicAuth
 from helpers import login_required, apology
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
-from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 # Configure application
@@ -88,7 +68,6 @@ def login():
     if request.method == "POST":
         if 'login' in request.form: 
             # Remember which user has logged in
-            print("up")
             email = request.form.get("email")
 
             # Ensure username was submitted
@@ -126,37 +105,47 @@ def index():
 #   renders the users' data and allows them to purchase new policies
     # Make sure that the users reached routes via GET 
     #   Committing to stream for accepting
+
     if request.method == "POST":
-        if 'Accept' in request.form: 
+        uw_result = None
+        # Get UW result data
+        """
+        uw_result = {
+            'term': request.form.get('term') + 'y',
+            'premiumpayment': request.form.get('premiumpayment'),
+            'email': request.form.get('email'),
+            'premiumstructure': request.form.get('premiumstructure'),
+            'desc': request.form.get('desc'),
+            'ctype': request.form.get('ctype'),
+            'name': request.form.get('name'),
+            'reason': request.form.get('reason'),
+            'cust_id': request.form.get('cust_id'),
+            'cust_name': request.form.get('cust_name'),
+            'gender': request.form.get('gender'),
+            'dob': request.form.get('dob'),
+            'country': request.form.get('country'),
+            'smoking_status': request.form.get('smoking_status'),
+            'policy_id': request.form.get('policy_id')
+        }
+        """
 
-
-            # kwargs = {
-            # 'term': request.form.get('term')+'y',
-            # 'premiumpayment': request.form.get('premiumpayment'),
-            # 'email': session.get('info')[4],
-            # 'premiumstructure': premium_structure,
-            # 'desc': policy_description,
-            # 'ctype': request.form.get('ctype'),
-            # 'name': request.form.get('name'),
-            # 'cus_id': session.get('info')[0]
-            # }
-            # prod = producer.main(**kwargs)
+        if 'Accept' in request.form:
+            # If policy is approved, Prospect become a Customer
+            status = {
+                'policy_status': 'Approved',
+                'customer_status': True
+            }
+            prod = producer.main(uw_result, status)
 
             return render_template("accept.html")
-            
-        if 'Decline' in request.form: 
-            # kwargs = {
-            # 'term': request.form.get('term')+'y',
-            # 'premiumpayment': request.form.get('premiumpayment'),
-            # 'email': session.get('info')[4],
-            # 'premiumstructure': premium_structure,
-            # 'desc': policy_description,
-            # 'ctype': request.form.get('ctype'),
-            # 'name': request.form.get('name'),
-            # 'cus_id': session.get('info')[0]
-            # }
-            # prod = producer.main(**kwargs)
-            
+
+        if 'Decline' in request.form:
+            status = {
+                'policy_status': 'Declined',
+                'customer_status': request.form.get('customer_status')
+            }
+            prod = producer.main(uw_result, status)
+
             return render_template("decline.html")
 
     if request.method == "GET":
@@ -231,7 +220,10 @@ def index():
             # DOBS = v['DOB']
             # POLICYTERM=POLICYTERM, POLICYDESCRIPTION=POLICYDESCRIPTION, DOBS=DOBS,
 
-            return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
+            return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS, CUSTOMER_STATUS=CUSTOMER_STATUS,
+                                   EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS, CUSTOMERNAME=CUSTOMERNAME,
+                                   GENDER=GENDER, PREMIUMSTRUCTURE=PREMIUMSTRUCTURE, PREMIUMPAYMENT=PREMIUMPAYMENT,
+                                   CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
             
             # get rid of the first five bytes
 def errorhandler(e):
