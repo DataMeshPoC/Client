@@ -4,9 +4,8 @@ import pathlib
 import subprocess
 import email
 import io 
-
+import consumer_policydraft_test as c
 import pyodbc
-import Consumer
 import producer_policy_uw_result
 import producer_policy
 import numpy as np 
@@ -28,6 +27,17 @@ from queue import Queue
 import uuid
 import avro.schema
 import avro.io
+import uuid  # for consumer group
+from confluent_kafka import Consumer, KafkaError, KafkaException
+import struct
+
+from confluent_avro import AvroKeyValueSerde, SchemaRegistry
+from confluent_avro.schema_registry import HTTPBasicAuth
+from confluent_avro import AvroValueSerde
+
+
+# for debugging
+import traceback
 from confluent_kafka import Consumer, KafkaError, KafkaException
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
@@ -118,60 +128,110 @@ def index():
     #   Committing to stream for accepting
     if request.method == "POST":
         if 'Accept' in request.form: 
-            kwargs = {
-            'term': request.form.get('term')+'y',
-            'premiumpayment': request.form.get('premiumpayment'),
-            'email': session.get('info')[4],
-            'premiumstructure': premium_structure,
-            'desc': policy_description,
-            'ctype': request.form.get('ctype'),
-            'name': request.form.get('name'),
-            'cus_id': session.get('info')[0]
-            }
-            prod = producer.main(**kwargs)
+
+
+            # kwargs = {
+            # 'term': request.form.get('term')+'y',
+            # 'premiumpayment': request.form.get('premiumpayment'),
+            # 'email': session.get('info')[4],
+            # 'premiumstructure': premium_structure,
+            # 'desc': policy_description,
+            # 'ctype': request.form.get('ctype'),
+            # 'name': request.form.get('name'),
+            # 'cus_id': session.get('info')[0]
+            # }
+            # prod = producer.main(**kwargs)
 
             return render_template("accept.html")
             
         if 'Decline' in request.form: 
-            kwargs = {
-            'term': request.form.get('term')+'y',
-            'premiumpayment': request.form.get('premiumpayment'),
-            'email': session.get('info')[4],
-            'premiumstructure': premium_structure,
-            'desc': policy_description,
-            'ctype': request.form.get('ctype'),
-            'name': request.form.get('name'),
-            'cus_id': session.get('info')[0]
-            }
-            prod = producer.main(**kwargs)
+            # kwargs = {
+            # 'term': request.form.get('term')+'y',
+            # 'premiumpayment': request.form.get('premiumpayment'),
+            # 'email': session.get('info')[4],
+            # 'premiumstructure': premium_structure,
+            # 'desc': policy_description,
+            # 'ctype': request.form.get('ctype'),
+            # 'name': request.form.get('name'),
+            # 'cus_id': session.get('info')[0]
+            # }
+            # prod = producer.main(**kwargs)
             
             return render_template("decline.html")
 
     if request.method == "GET":
         # consumes the users' data and renders it onto the index page
-            p = subprocess.run('python3 consumer.py', shell=True, stdout=subprocess.PIPE)
-            v = p.stdout.decode()
-            print(v)
-            POLICYNAME = v
-            print(POLICYNAME)
-            POLICYTERM = v["POLICYTERM"]
-            POLICYTYPE = v["POLICYTYPE"]
-            POLICYNAME = v["POLICYNAME"]
-            DES = v["POLICYDESCRIPTION"]
-            CURRENCY = v["POLICYCURRENCY"]
-            PREMIUMPAYMENT = v["PREMIUMPAYMENT"]
-            PREMIUMSTRUCTURE = v["PREMIUMSTRUCTURE"]
-            PREMIUMDESCRIPTION = v["PREMIUMDESCRIPTION"]
-            GENDER = v["GENDER"]
-            CUSTOMERNAME = v["CUSTOMERNAME"]
-            CUSTOMERID = v["CUSTOMERID"]
-            POLICYSTATUS = v["POLICYSTATUS"]
-            COUNTRY = v["COUNTRY"]
-            EMAIL = v["EMAIL"]
-            CUSTOMER_STATUS = v["CUSTOMER_STATUS"]
-            SMOKING_STATUS = v["SMOKING_STATUS"]
-            DOBS = v["DOB"]
-            return render_template("index.html", DOBS=DOBS, POLICYTERM=POLICYTERM, SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,POLICYDESCRIPTION=POLICYDESCRIPTION,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
+            # p = subprocess.run('python3 consumer_policydraft_test.py', shell=True, stdout=subprocess.PIPE)
+            
+            def basic_consume_loop(consumer, topics, avroSerde):
+                try:
+                    consumer.subscribe(topics)
+
+                    while True:
+                        msg = consumer.poll(10)
+                        if msg is None:
+                            continue
+                        if msg.error():
+                            print('Consumer error: {}'.format(msg.error()))
+                            continue
+                        else:
+                            # using avro parser here
+                            if msg.value() is not None:
+                                v = avroSerde.deserialize(msg.value())
+                                k = struct.unpack('>i', msg.key())[0]
+                                consumer.close()
+                                # print('>> {} {} {} {}'.format(msg.topic(), msg.partition(), msg.offset(), k))
+                                # print('Consumed: {}'.format(v))
+                                emails = v['EMAIL'].split("\n")
+
+                                print(emails)
+                                
+                finally:
+                    return v
+                    
+            def consumed():
+                consumer = Consumer({
+                'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
+                'security.protocol': 'SASL_SSL',
+                'sasl.mechanisms': 'PLAIN',
+                'sasl.username': 'IHO7XVPCJCCBZAYX',
+                'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
+                'group.id': str(uuid.uuid1()),  # just generating a groupid, can be replaced by a specific one
+                'auto.offset.reset': 'earliest'
+            })
+
+                # topic name used by parser
+                KAFKA_TOPIC = "PolicyDraftList"
+
+                registry_client = SchemaRegistry(
+                "https://psrc-gq7pv.westus2.azure.confluent.cloud",
+                HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
+                headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
+            )
+
+                avroSerde = AvroValueSerde(registry_client, KAFKA_TOPIC)
+                return basic_consume_loop(consumer, ["PolicyDraftList"], avroSerde)
+            
+            v = consumed()
+                   
+            POLICYTYPE = v['POLICYTYPE']
+            POLICYNAME = v['POLICYNAME']
+            DES = v['POLICYDESCRIPTION']
+            CURRENCY = v['POLICYCURRENCY']
+            PREMIUMPAYMENT = v['PREMIUMPAYMENT']
+            PREMIUMSTRUCTURE = v['PREMIUMSTRUCTURE']
+            GENDER = v['GENDER']
+            CUSTOMERNAME = v['CUSTOMERNAME']
+            CUSTOMERID = v['CUSTOMERID']
+            POLICYSTATUS = v['POLICYSTATUS']
+            COUNTRY = v['COUNTRY']
+            EMAIL = v['EMAIL']
+            CUSTOMER_STATUS = v['CUSTOMER_STATUS']
+            SMOKING_STATUS = v['SMOKING_STATUS']
+            # DOBS = v['DOB']
+            # POLICYTERM=POLICYTERM, POLICYDESCRIPTION=POLICYDESCRIPTION, DOBS=DOBS,
+
+            return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
             
             # get rid of the first five bytes
 def errorhandler(e):
