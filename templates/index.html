@@ -12,8 +12,11 @@
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
             
             <div class="col-lg-6 mx-auto">
+                <!-- Runs a for loop through all the items stored in TERM
+                Each time it renders one item (or T) in the whole variable TERM -->
                 {%for T in TERM %}
                 <p>Policy Term: {{ T.POLICYTERM }} </p>
+                <!-- terminate the for loop -->
                 {% endfor %}
 
                 <p> {{ E.POLICYTYPE }} </p>
