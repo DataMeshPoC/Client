@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from json import decoder
 from pickle import TRUE
 from unicodedata import name
 import uuid
@@ -6,10 +7,24 @@ import sys
 from confluent_kafka import Consumer, KafkaError, KafkaException
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
-
+from confluent_kafka.error import ConsumeError, KeyDeserializationError,ValueDeserializationError
+from confluent_kafka.serialization import (SerializationContext,
+                            MessageField)
+from avro.io import DatumReader, BinaryDecoder
+import avro.schema
 import traceback
+import io 
 
-def basic_consume_loop(consumer, topics, avroSerde):
+schema = avro.schema.parse(open("PolicyDraftListSchema.avsc").read())
+reader = DatumReader(schema)
+
+
+def __init__(self, conf):
+        conf_copy = conf.copy()
+        self._key_deserializer = conf_copy.pop('key.deserializer', None)
+        self._value_deserializer = conf_copy.pop('value.deserializer', None)
+		
+def basic_consume_loop(consumer, topics):
 	running = True
 	try:
 		consumer.subscribe(topics)
@@ -23,16 +38,20 @@ def basic_consume_loop(consumer, topics, avroSerde):
 					sys.stderr.wrte('%% %s [%d] reached end of offset %d \n%')
 					(msg.topic(), msg.partition(), msg.offset())
 			else:
-				v = avroSerde.value.deserialize(msg.value())
-	
-				print('Consumed: {}'.format(v))
-				print(type(v))
-				print(v["CUSTOMERID"])
-				print(type(v["CUSTOMERID"]))
-				running = False
-				return v
+				msg_value = msg.value()
+				event_dict = decode(msg_value)
+        print(type(event_dict))
+				print(event_dict)
+
 	finally:
 		consumer.close()
+
+def decode(msg_value):
+	message_bytes = io.BytesIO(msg_value)
+	message_bytes.see(5)
+	decpder = BinaryDecoder(message_bytes)
+	event_dict = reader.read(decoder)
+	return event_dict
 
 def main():
 	consumer = Consumer({
@@ -43,19 +62,17 @@ def main():
 		'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
 		'group.id': str(uuid.uuid1()),
 		'auto.offset.reset': 'earliest'
-		
 	})
 
-	KAFKA_TOPIC = "PolicyDraftList"
+	KAFKA_TOPIC = 'PolicyDraftList'
 
 	registry_client = SchemaRegistry(
 		"https://psrc-gq7pv.westus2.azure.confluent.cloud",
 		HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
-		headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
+		headers={"Content-Type": "application/vnd.schemaregistry.v1+json"}
 	)
-	avroSerde = AvroKeyValueSerde(registry_client, KAFKA_TOPIC)
 
-	basic_consume_loop(consumer, ['PolicyDraftList'], avroSerde)
+	basic_consume_loop(consumer, ['PolicyDraftList'])
 
 
 if __name__ == '__main__':

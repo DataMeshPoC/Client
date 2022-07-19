@@ -12,71 +12,24 @@
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
             
             <div class="col-lg-6 mx-auto">
-                <!-- Runs a for loop through all the items stored in TERM
-                Each time it renders one item (or T) in the whole variable TERM -->
-                {%for T in TERM %}
-                <p>Policy Term: {{ T.POLICYTERM }} </p>
-                <!-- terminate the for loop -->
-                {% endfor %}
-
-                <p> {{ E.POLICYTYPE }} </p>
-                {% endfor %}
-
-                {%for N in POLICYNAME %}
-                <p> {{ N.POLICYNAME }} </p>
-                {% endfor %}
-
-                {%for DE in POLICYDESCRIPTION %}
-                <p> {{ DE.POLICYDESCRIPTION }} </p>
-                {% endfor %}
-
-                {%for CUR in CURRENCY %}
-                <p> {{ CUR.POLICYCURRENCY }} </p>
-                {% endfor %}
-
-                {%for PAY in PREMIUMPAYMENT %}
-                <p> {{ PAY.PREMIUMPAYMENT }} </p>
-                {% endfor %}
-
-                {%for STRUC in PREMIUMSTRUCTURE %}
-                <p> {{ STRUC.PREMIUMSTRUCTURE }} </p>
-                {% endfor %}
-
-                {%for P in POLICYSTATUS %}
-                <p> {{ P.POLICYSTATUS }} </p>
-                {% endfor %}
-
-                {%for ID in CUSTOMERID %}
-                <p> {{ ID.CUSTOMERID }} </p>
-                {% endfor %}
-
-                {%for CNAME in CUSTOMERNAME %}
-                <p> {{ CNAME.CUSTOMERNAME }} </p>
-                {% endfor %}
-
-                {%for G in GENDER %}
-                <p> {{ G.GENDER }} </p>
-                {% endfor %}
-
-                {%for d in DOBS%}
-                <p> {{ d.DOB }} </p>
-                {% endfor %}
-                
-                {%for CO in COUNTRY%}
-                <p> {{ CO.COUNTRY }} </p>
-                {% endfor %}
-                
-                {%for EM in EMAIL%}
-                <p> {{ EM.EMAIL }} </p>
-                {% endfor %}
-
-                {%for SMT in SMOKING_STATUS%}
-                <p> {{ ST.SMOKING_STATUS }} </p>
-                {% endfor %}
-
-                {%for CT in CUSTOMER_STATUS%}
-                <p> {{ CT.CUSTOMER_STATUS }} </p>
-                {% endfor %}
+    
+                <p>{{ POLICYTERM }} </p>
+                <p> {{ POLICYTYPE }} </p>
+                <p> {{ POLICYNAME }} </p>
+                <p> {{ POLICYDESCRIPTION }} </p>
+                <p> {{ POLICYCURRENCY }} </p>
+                <p> {{ PREMIUMPAYMENT }} </p>
+                <p> {{ PREMIUMSTRUCTURE }} </p>
+                <p> {{ POLICYSTATUS }} </p>
+                <p> {{ CUSTOMERID }} </p>
+                <p> {{ CUSTOMERNAME }} </p>
+                <p> {{ GENDER }} </p>
+                <p> {{ DOB }} </p>
+                <p> {{ COUNTRY }} </p>
+                <p> {{ EMAIL }} </p>
+                <p> {{ SMOKING_STATUS }} </p>
+                <p> {{ CUSTOMER_STATUS }} </p>
+        
                 <form action="" method="POST">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                     <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
