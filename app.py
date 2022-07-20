@@ -352,19 +352,9 @@ def index():
         POLICYTERM = v['POLICYTERM']
         POLICYDESCRIPTION = v['POLICYDESCRIPTION']
         DOB = v['DOB']
-        if g == True:
-            CUSTOMER_STATUS = 'Yes'
-        else: 
-            CUSTOMER_STATUS = 'No'
-        if h == True:
-            SMOKING_STATUS = 'Yes'
-        else: 
-            SMOKING_STATUS = 'No'
-        if k == True:
-            CUSTOMER_STATUS = 'Yes'
-        else:
-            CUSTOMER_STATUS = 'No'
-
+        CUSTOMER_STATUS = 'Yes' if g else 'No'
+        SMOKING_STATUS = 'Yes' if h else 'NO'
+       
         return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,
         CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,
         POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,
