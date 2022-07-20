@@ -89,16 +89,15 @@ def login():
     if request.method == "POST":
         if 'login' in request.form: 
             # Remember which user has logged in
-            print("up")
             email = request.form.get("email")
 
             # Ensure username was submitted
             if not email:
                 return apology("must provide email")
-            print("to")
+  
             # Hardcoded email address- unsure of which table to connect to
             j = "john@example.com"
-            print("here")
+      
             # Check user
             if str(email) == j:
                 session['user_id'] = j  
@@ -206,11 +205,12 @@ def index():
         
         # Store the dict from the consumer call
         v = client_consumed()
+        print(v)
         # Index into dict for each entry to be rendered
         POLICYTYPE = v['POLICYTYPE']
         POLICYNAME = v['POLICYNAME']
-        DES = v['POLICYDESCRIPTION']
-        CURRENCY = v['POLICYCURRENCY']
+        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
+        POLICYCURRENCY = v['POLICYCURRENCY']
         PREMIUMPAYMENT = v['PREMIUMPAYMENT']
         PREMIUMSTRUCTURE = v['PREMIUMSTRUCTURE']
         GENDER = v['GENDER']
@@ -225,71 +225,12 @@ def index():
         POLICYDESCRIPTION = v['POLICYDESCRIPTION']
         # DOB = datetime.to_timestamp(v['DOB'], "dd-MMM-yyyy HH:mm")
 
-        def consume_loop(consumer, topics, avroSerde):
-            running = True
-            try:
-                consumer.subscribe(topics)
-
-                while running:
-                    msg = consumer.poll(timeout=1.0)
-                    if msg is None: continue
-                    if msg.error():
-                        if msg.error().code() == KafkaError._PARTITION_EOF:
-                            # end of partition event
-                            sys.stderr.wrte('%% %s [%d] reached end of offset %d \n%')
-                            (msg.topic(), msg.partition(), msg.offset())
-                    else:
-                        v = avroSerde.value.deserialize(msg.value())
-                        print('Consumed: {}'.format(v))
-                        print(type(v))
-                        print(v["CUSTOMERID"])
-                        print(type(v["CUSTOMERID"]))
-                        running = False
-                        return v
-            finally:
-                consumer.close()
-        # Consume from customerlist topic
-        def customer_consumed():
-            KAFKA_TOPIC = "CustomerList"
-            
-            consumer = Consumer({'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
-            'security.protocol': 'SASL_SSL',
-            'sasl.mechanisms': 'PLAIN',
-            'sasl.username': 'IHO7XVPCJCCBZAYX',
-            'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
-            'group.id': str(uuid.uuid1()),
-            'auto.offset.reset': 'earliest'})
-        
-            registry_client = SchemaRegistry(
-                "https://psrc-gq7pv.westus2.azure.confluent.cloud",
-                HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
-                headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
-            )
-            avroSere = AvroKeyValueSerde(registry_client, KAFKA_TOPIC)
-
-            return consume_loop(consumer, ['CustomerList'], avroSere)
-
-        # Call the customer producer
-        b = customer_consumed()
-
-        # Index into b, dictionary, to get the various information
-        CCUSTOMERID = b['CUSTOMERID']
-        CNAME = b['NAME']
-        CGENDER = b['GENDER']
-        # CDOB = b['DOB']
-        CCOUNTRY = b['COUNTRY']
-        CSMOKING_STATUS= b['SMOKING_STATUS']
-        CCUSTOMER_STATUS = b['CUSTOMER_STATUS']
-        
         return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,
         CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,
         POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,
         PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,
-        CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE, 
-        POLICYTERM=POLICYTERM,CCUSTOMERID=CCUSTOMERID, CNAME=CNAME,
-        CGENDER=CGENDER,  CCOUNTRY=CCOUNTRY,
-        CSMOKING_STATUS=CSMOKING_STATUS, CCUSTOMER_STATUS=CCUSTOMER_STATUS)
-        # DOB=DOB, CDOB=CDOB,
+        POLICYCURRENCY=POLICYCURRENCY, POLICYDESCRIPTION=POLICYDESCRIPTION, 
+        POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE, POLICYTERM=POLICYTERM)
         
         
 def errorhandler(e):
