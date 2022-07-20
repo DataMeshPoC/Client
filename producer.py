@@ -21,7 +21,7 @@ def acked(err, msg):
         print('Produced to: {} [{}] @ {}'.format(msg.topic(), msg.partition(), msg.offset()))
 
 
-def main(accept_value):
+def main(uw_result, status):
 	
 	"""
 	producer = Producer({
@@ -47,25 +47,25 @@ def main(accept_value):
 	# format = yyyy-MM-dd:HH
 
 	message = dict(
-		POLICYTERM=accept_value['term'],
-		POLICYTYPE=accept_value['ctype'],
-		POLICYNAME='life policy 678 20y ',
-		POLICYDESCRIPTION='test description',
+		POLICYTERM=uw_result['term'],
+		POLICYTYPE=uw_result['ctype'],
+		POLICYNAME=uw_result['name'],
+		POLICYDESCRIPTION=uw_result['desc'],
 		POLICYCURRENCY='HKD',
-		PREMIUMPAYMENT='monthly',
-		PREMIUMSTRUCTURE='premium structure',
-		POLICYSTATUS='Declined',
-		REASON='smoker',
+		PREMIUMPAYMENT=uw_result['premiumpayment'],
+		PREMIUMSTRUCTURE=uw_result['premiumstructure'],
+		POLICYSTATUS=status['policy_status'],
+		REASON=uw_result['reason'],
 		UWTIME=now.strftime("%Y-%m-%d:%H"),
-		CUSTOMERNAME='Gemma Quinn',
-		GENDER='M',
-		DOB = datetime.date(2000,2,11),
-		COUNTRY='Poland',
-		EMAIL='est.ac.mattis@aol.couk',
-		SMOKING_STATUS=True,
-		CUSTOMER_STATUS=True
+		CUSTOMERNAME=uw_result['cust_name'],
+		GENDER=uw_result['gender'],
+		DOB =uw_result['dob'],
+		COUNTRY=uw_result['country'],
+		EMAIL=uw_result['email'],
+		SMOKING_STATUS=uw_result['smoking_status'],
+		CUSTOMER_STATUS=status['customer_status']
 	)
-	key = 5555
+	key = uw_result['policyid']
 
 	sr = SchemaRegistryClient({
 		"url": "https://psrc-gq7pv.westus2.azure.confluent.cloud",
@@ -89,15 +89,13 @@ def main(accept_value):
 		})
 
 	producer.produce(topic='PolicyUWResult', key=key, value=message, on_delivery=acked)
-	#producer.flush
+
 	producer.poll(0)
 	producer.flush()
 
 
 if __name__ == '__main__':
 	try:
-		input("Press Enter to start")
 		main()
 	except Exception:
 		print (traceback.format_exc())
-		input("Press return to exit")
