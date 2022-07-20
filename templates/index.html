@@ -6,24 +6,38 @@
 {% endblock %}
 
 {% block main %}
-<main class="container py-5 text-center"
-    <form action="/" method="post"
+<main class="container py-5 text-center">
+    <form action="/" method="post">
         <div class="px-4 py-5 my-5 text-center">
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
-                        
+
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-4">
                         <h2> POLICY </h2>
-                    <p>Term: {{ POLICYTERM }} </p>
-                    <p>Type: {{ POLICYTYPE }} </p>
-                    <p>Name: {{ POLICYNAME }} </p>
-                    <p>Description: {{ POLICYDESCRIPTION }} </p>
-                    <p>Currency: {{ POLICYCURRENCY }} </p>
-                    <p>Payment: {{ PREMIUMPAYMENT }} </p>
-                    <p>Structure: {{ PREMIUMSTRUCTURE }} </p>
-                    <p>Status: {{ POLICYSTATUS }} </p>
-                          
+                        <p>Term: {{ POLICYTERM }} </p>
+                        <p>Type: {{ POLICYTYPE }} </p>
+                        <p>Name: {{ POLICYNAME }} </p>
+                        <p>Description: {{ POLICYDESCRIPTION }} </p>
+                        <p>Currency: {{ POLICYCURRENCY }} </p>
+                        <p>Payment: {{ PREMIUMPAYMENT }} </p>
+                        <p>Structure: {{ PREMIUMSTRUCTURE }} </p>
+                        <p>Status: {{ POLICYSTATUS }} </p>
+
+                        <div class="input-group mb-3">
+                            <span><strong>Premium Payment:  </strong></span>
+                            <p style="padding-left: 5px" name="premiumpayment" id="premiumpayment"> {{ PREMIUMPAYMENT }} </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="policy_status">Status</label>
+                            <input type="text" class="form-control" id="policy_status" name="policy_status" placeholder="policy_status" value="{{ POLICYSTATUS }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="premiumstructure">Structure</label>
+                            <input type="text" class="form-control" id="premiumstructure" name="premiumstructure" placeholder="premiumstructure" value="{{ PREMIUMSTRUCTURE }}">
+                        </div>
+
                     </div>
                     <div class="col-4">
                         <h2> CUSTOMER </h2>
@@ -34,17 +48,14 @@
                         <p>Date of birth: {{ DOB }}</p>
                         <p>Email:  {{ EMAIL }} </p>
                         <p>Smoking Status: {{ SMOKING_STATUS }} </p>
-                        <p>Customer Status: {{ CUSTOMER_STATUS }} </p>  
+                        <p>Customer Status: {{ CUSTOMER_STATUS }} </p>
                     </div>
                 </div>
             </div>
 
-                <form action="" method="POST">
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
-                    <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
-                </div>
-                </form>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
+                <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
             </div>
         </div>
     </form>
