@@ -127,6 +127,7 @@ def index():
     # Make sure that the users reached routes via GET 
     #   Committing to stream for accepting
     if request.method == "POST":
+
         if 'Accept' in request.form: 
 
 
@@ -163,26 +164,25 @@ def index():
         # Consume from policy draft list topic
         
         def basic_consume_loop(consumer, topics, avroSerde):
-            running = True
-            consumer.subscribe(topics)
+            try:
+                consumer.subscribe(topics)
 
-            while running:
-                msg = consumer.poll(10)
-                if msg is None:
-                    continue
-                if msg.error():
-                    print('Consumer error: {}'.format(msg.error()))
-                    continue
-                else:
-                    # using avro parser here
-                    if msg.value() is not None:
-                        print(msg.value())
-                        vee = avroSerde.deserialize(msg.value())
-                        k = struct.unpack('>i', msg.key())[0]
-                        running = False
-                        return vee
-
-        
+                while True:
+                    msg = consumer.poll(timeout=1.0)
+                    if msg is None:
+                        continue
+                    if msg.error():
+                        print('Consumer error: {}'.format(msg.error()))
+                        continue
+                    else:
+                        # using avro parser here
+                        if msg.value() is not None:
+                            v = avroSerde.deserialize(msg.value())
+                            k = struct.unpack('>i', msg.key())[0]
+                            print(v)
+                            return(v)
+            finally:
+                consumer.close()
         def client_consumed():
             # topic name used by parser
             KAFKA_TOPIC = "PolicyDraftList"
@@ -219,11 +219,24 @@ def index():
         POLICYSTATUS = v['POLICYSTATUS']
         COUNTRY = v['COUNTRY']
         EMAIL = v['EMAIL']
-        CUSTOMER_STATUS = v['CUSTOMER_STATUS']
-        SMOKING_STATUS = v['SMOKING_STATUS']
+        g = v['CUSTOMER_STATUS']
+        h = v['SMOKING_STATUS']
+        k = v['CUSTOMER_STATUS']
+        if g == True:
+            SMOKING_STATUS = 'Yes'
+        else: 
+            SMOKING_STATUS = 'No'
+        if h == True:
+            SMOKING_STATUS = 'Yes'
+        else: 
+            SMOKING_STATUS = 'No'
+        if v == True:
+            CUSTOMER_STATUS = 'Yes'
+        else:
+            CUSTOMER_STATUS = 'No'
         POLICYTERM = v['POLICYTERM']
         POLICYDESCRIPTION = v['POLICYDESCRIPTION']
-        # DOB = datetime.to_timestamp(v['DOB'], "dd-MMM-yyyy HH:mm")
+        DOB = v['DOB']
 
         return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,
         CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,
@@ -231,7 +244,7 @@ def index():
         PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,
         POLICYCURRENCY=POLICYCURRENCY, POLICYDESCRIPTION=POLICYDESCRIPTION, 
         POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE, CUSTOMERID=CUSTOMERID,
-        POLICYTERM=POLICYTERM)
+        POLICYTERM=POLICYTERM, DOB=DOB)
         
         
 def errorhandler(e):

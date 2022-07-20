@@ -15,11 +15,12 @@ import traceback
 
 # mainly taken from https://docs.confluent.io/kafka-clients/python/current/overview.html#id1
 def basic_consume_loop(consumer, topics, avroSerde):
+    running = True
     try:
         consumer.subscribe(topics)
 
-        while True:
-            msg = consumer.poll(10)
+        while running:
+            msg = consumer.poll(timeout=1.0)
             if msg is None:
                 continue
             if msg.error():
@@ -30,9 +31,13 @@ def basic_consume_loop(consumer, topics, avroSerde):
                 if msg.value() is not None:
                     v = avroSerde.deserialize(msg.value())
                     k = struct.unpack('>i', msg.key())[0]
-                    print(v)
+                    s = print(v)
+                    email = v['EMAIL']
+                    for em in email: 
+                        print(em)
                     return(v)
     finally:
+        running = False
         consumer.close()
 
 
@@ -67,3 +72,4 @@ if __name__ == '__main__':
     except Exception:
         # for debugging
         print(traceback.format_exc())
+
