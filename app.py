@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import sys
 import pathlib
@@ -160,37 +161,33 @@ def index():
             return render_template("decline.html")
 
     if request.method == "GET":
-        # consumes the users' data and renders it onto the index page
-            # p = subprocess.run('python3 consumer_policydraft_test.py', shell=True, stdout=subprocess.PIPE)
-            
-            def basic_consume_loop(consumer, topics, avroSerde):
-                try:
-                    consumer.subscribe(topics)
+        # Consume from policy draft list topic
+        
+        def basic_consume_loop(consumer, topics, avroSerde):
+            running = True
+            consumer.subscribe(topics)
 
-                    while True:
-                        msg = consumer.poll(10)
-                        if msg is None:
-                            continue
-                        if msg.error():
-                            print('Consumer error: {}'.format(msg.error()))
-                            continue
-                        else:
-                            # using avro parser here
-                            if msg.value() is not None:
-                                v = avroSerde.deserialize(msg.value())
-                                k = struct.unpack('>i', msg.key())[0]
-                                consumer.close()
-                                # print('>> {} {} {} {}'.format(msg.topic(), msg.partition(), msg.offset(), k))
-                                # print('Consumed: {}'.format(v))
-                                emails = v['EMAIL'].split("\n")
+            while running:
+                msg = consumer.poll(10)
+                if msg is None:
+                    continue
+                if msg.error():
+                    print('Consumer error: {}'.format(msg.error()))
+                    continue
+                else:
+                    # using avro parser here
+                    if msg.value() is not None:
+                        print(msg.value())
+                        vee = avroSerde.deserialize(msg.value())
+                        k = struct.unpack('>i', msg.key())[0]
+                        running = False
+                        return vee
 
-                                print(emails)
-                                
-                finally:
-                    return v
-                    
-            def consumed():
-                consumer = Consumer({
+        
+        def client_consumed():
+            # topic name used by parser
+            KAFKA_TOPIC = "PolicyDraftList"
+            consumer = Consumer({
                 'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
                 'security.protocol': 'SASL_SSL',
                 'sasl.mechanisms': 'PLAIN',
@@ -199,41 +196,102 @@ def index():
                 'group.id': str(uuid.uuid1()),  # just generating a groupid, can be replaced by a specific one
                 'auto.offset.reset': 'earliest'
             })
-
-                # topic name used by parser
-                KAFKA_TOPIC = "PolicyDraftList"
-
-                registry_client = SchemaRegistry(
+            registry_client = SchemaRegistry(
                 "https://psrc-gq7pv.westus2.azure.confluent.cloud",
                 HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
                 headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
             )
+            avroSerde = AvroValueSerde(registry_client, KAFKA_TOPIC)
+            return basic_consume_loop(consumer, ["PolicyDraftList"], avroSerde)
+        
+        # Store the dict from the consumer call
+        v = client_consumed()
+        # Index into dict for each entry to be rendered
+        POLICYTYPE = v['POLICYTYPE']
+        POLICYNAME = v['POLICYNAME']
+        DES = v['POLICYDESCRIPTION']
+        CURRENCY = v['POLICYCURRENCY']
+        PREMIUMPAYMENT = v['PREMIUMPAYMENT']
+        PREMIUMSTRUCTURE = v['PREMIUMSTRUCTURE']
+        GENDER = v['GENDER']
+        CUSTOMERNAME = v['CUSTOMERNAME']
+        CUSTOMERID = v['CUSTOMERID']
+        POLICYSTATUS = v['POLICYSTATUS']
+        COUNTRY = v['COUNTRY']
+        EMAIL = v['EMAIL']
+        CUSTOMER_STATUS = v['CUSTOMER_STATUS']
+        SMOKING_STATUS = v['SMOKING_STATUS']
+        POLICYTERM = v['POLICYTERM']
+        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
+        # DOB = datetime.to_timestamp(v['DOB'], "dd-MMM-yyyy HH:mm")
 
-                avroSerde = AvroValueSerde(registry_client, KAFKA_TOPIC)
-                return basic_consume_loop(consumer, ["PolicyDraftList"], avroSerde)
-            
-            v = consumed()
-                   
-            POLICYTYPE = v['POLICYTYPE']
-            POLICYNAME = v['POLICYNAME']
-            DES = v['POLICYDESCRIPTION']
-            CURRENCY = v['POLICYCURRENCY']
-            PREMIUMPAYMENT = v['PREMIUMPAYMENT']
-            PREMIUMSTRUCTURE = v['PREMIUMSTRUCTURE']
-            GENDER = v['GENDER']
-            CUSTOMERNAME = v['CUSTOMERNAME']
-            CUSTOMERID = v['CUSTOMERID']
-            POLICYSTATUS = v['POLICYSTATUS']
-            COUNTRY = v['COUNTRY']
-            EMAIL = v['EMAIL']
-            CUSTOMER_STATUS = v['CUSTOMER_STATUS']
-            SMOKING_STATUS = v['SMOKING_STATUS']
-            # DOBS = v['DOB']
-            # POLICYTERM=POLICYTERM, POLICYDESCRIPTION=POLICYDESCRIPTION, DOBS=DOBS,
+        def consume_loop(consumer, topics, avroSerde):
+            running = True
+            try:
+                consumer.subscribe(topics)
 
-            return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE)
+                while running:
+                    msg = consumer.poll(timeout=1.0)
+                    if msg is None: continue
+                    if msg.error():
+                        if msg.error().code() == KafkaError._PARTITION_EOF:
+                            # end of partition event
+                            sys.stderr.wrte('%% %s [%d] reached end of offset %d \n%')
+                            (msg.topic(), msg.partition(), msg.offset())
+                    else:
+                        v = avroSerde.value.deserialize(msg.value())
+                        print('Consumed: {}'.format(v))
+                        print(type(v))
+                        print(v["CUSTOMERID"])
+                        print(type(v["CUSTOMERID"]))
+                        running = False
+                        return v
+            finally:
+                consumer.close()
+        # Consume from customerlist topic
+        def customer_consumed():
+            KAFKA_TOPIC = "CustomerList"
             
-            # get rid of the first five bytes
+            consumer = Consumer({'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
+            'security.protocol': 'SASL_SSL',
+            'sasl.mechanisms': 'PLAIN',
+            'sasl.username': 'IHO7XVPCJCCBZAYX',
+            'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
+            'group.id': str(uuid.uuid1()),
+            'auto.offset.reset': 'earliest'})
+        
+            registry_client = SchemaRegistry(
+                "https://psrc-gq7pv.westus2.azure.confluent.cloud",
+                HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
+                headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
+            )
+            avroSere = AvroKeyValueSerde(registry_client, KAFKA_TOPIC)
+
+            return consume_loop(consumer, ['CustomerList'], avroSere)
+
+        # Call the customer producer
+        b = customer_consumed()
+
+        # Index into b, dictionary, to get the various information
+        CCUSTOMERID = b['CUSTOMERID']
+        CNAME = b['NAME']
+        CGENDER = b['GENDER']
+        # CDOB = b['DOB']
+        CCOUNTRY = b['COUNTRY']
+        CSMOKING_STATUS= b['SMOKING_STATUS']
+        CCUSTOMER_STATUS = b['CUSTOMER_STATUS']
+        
+        return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,
+        CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,
+        POLICYSTATUS=POLICYSTATUS,CUSTOMERNAME=CUSTOMERNAME,GENDER=GENDER,
+        PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,PREMIUMPAYMENT=PREMIUMPAYMENT,
+        CURRENCY=CURRENCY, DES=DES, POLICYNAME=POLICYNAME, POLICYTYPE=POLICYTYPE, 
+        POLICYTERM=POLICYTERM,CCUSTOMERID=CCUSTOMERID, CNAME=CNAME,
+        CGENDER=CGENDER,  CCOUNTRY=CCOUNTRY,
+        CSMOKING_STATUS=CSMOKING_STATUS, CCUSTOMER_STATUS=CCUSTOMER_STATUS)
+        # DOB=DOB, CDOB=CDOB,
+        
+        
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):

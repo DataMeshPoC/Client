@@ -10,26 +10,40 @@
     <form action="/" method="post"
         <div class="px-4 py-5 my-5 text-center">
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
+                        
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <h2> POLICY </h2>
+                        <p>Policyterm: {{ POLICYTERM }} </p>
+                        <p> {{ POLICYTYPE }} </p>
+                        <p> {{ POLICYNAME }} </p>
+                        <p> {{ POLICYDESCRIPTION }} </p>
+                        <p> {{ POLICYCURRENCY }} </p>
+                        <p> {{ PREMIUMPAYMENT }} </p>
+                        <p> {{ PREMIUMSTRUCTURE }} </p>
+                        <p> {{ POLICYSTATUS }} </p>
+                        <p> {{ CUSTOMERID }} </p>
+                        <p> {{ CUSTOMERNAME }} </p>
+                        <p> {{ GENDER }} </p>
             
-            <div class="col-lg-6 mx-auto">
-    
-                <p>{{ POLICYTERM }} </p>
-                <p> {{ POLICYTYPE }} </p>
-                <p> {{ POLICYNAME }} </p>
-                <p> {{ POLICYDESCRIPTION }} </p>
-                <p> {{ POLICYCURRENCY }} </p>
-                <p> {{ PREMIUMPAYMENT }} </p>
-                <p> {{ PREMIUMSTRUCTURE }} </p>
-                <p> {{ POLICYSTATUS }} </p>
-                <p> {{ CUSTOMERID }} </p>
-                <p> {{ CUSTOMERNAME }} </p>
-                <p> {{ GENDER }} </p>
-                <p> {{ DOB }} </p>
-                <p> {{ COUNTRY }} </p>
-                <p> {{ EMAIL }} </p>
-                <p> {{ SMOKING_STATUS }} </p>
-                <p> {{ CUSTOMER_STATUS }} </p>
-        
+                        <p> {{ COUNTRY }} </p>
+                        <p> {{ EMAIL }} </p>
+                        <p> {{ SMOKING_STATUS }} </p>
+                        <p> {{ CUSTOMER_STATUS }} </p>        
+                    </div>
+                    <div class="col-4">
+                        <h2> CUSTOMER </h2>
+                        <p> {{ CCUSTOMERID }} </p>  
+                        <p> {{ CGENDER }} </p>  
+                            <p>{{ CNAME }} </p>  
+                                <p>{{ CSMOKING_STATUS }} </p>  
+                                    <p>{{ CCOUNTRY }} </p>  
+                                        <p>{{ CCUSTOMER_STATUS }}</p>  
+                    </div>
+                </div>
+            </div>
+
                 <form action="" method="POST">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                     <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>

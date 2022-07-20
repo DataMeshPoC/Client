@@ -30,9 +30,7 @@ def basic_consume_loop(consumer, topics, avroSerde):
                 if msg.value() is not None:
                     v = avroSerde.deserialize(msg.value())
                     k = struct.unpack('>i', msg.key())[0]
-                    # print('>> {} {} {} {}'.format(msg.topic(), msg.partition(), msg.offset(), k))
-                    # print('Consumed: {}'.format(v))
-                    # emails = v['EMAIL'].split("\n")
+                    print(v)
                     return(v)
     finally:
         consumer.close()
