@@ -353,14 +353,14 @@ def index():
         POLICYDESCRIPTION = v['POLICYDESCRIPTION']
         DOB = v['DOB']
         if g == True:
-            SMOKING_STATUS = 'Yes'
+            CUSTOMER_STATUS = 'Yes'
         else: 
-            SMOKING_STATUS = 'No'
+            CUSTOMER_STATUS = 'No'
         if h == True:
             SMOKING_STATUS = 'Yes'
         else: 
             SMOKING_STATUS = 'No'
-        if v == True:
+        if k == True:
             CUSTOMER_STATUS = 'Yes'
         else:
             CUSTOMER_STATUS = 'No'
