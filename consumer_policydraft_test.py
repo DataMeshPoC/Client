@@ -33,9 +33,7 @@ def basic_consume_loop(consumer, topics, avroSerde):
                     k = struct.unpack('>i', msg.key())[0]
                     s = print(v)
                     email = v['EMAIL']
-                    for em in email: 
-                        print(em)
-                    return(v)
+                    print(type(email))
     finally:
         running = False
         consumer.close()

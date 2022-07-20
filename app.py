@@ -31,7 +31,7 @@ import avro.io
 import uuid  # for consumer group
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import struct
-
+import producer
 from confluent_avro import AvroKeyValueSerde, SchemaRegistry
 from confluent_avro.schema_registry import HTTPBasicAuth
 from confluent_avro import AvroValueSerde
@@ -127,37 +127,97 @@ def index():
     # Make sure that the users reached routes via GET 
     #   Committing to stream for accepting
     if request.method == "POST":
+        def basic_consume_loop(consumer, topics, avroSerde):
+            try:
+                consumer.subscribe(topics)
+
+                while True:
+                    msg = consumer.poll(timeout=1.0)
+                    if msg is None:
+                        continue
+                    if msg.error():
+                        print('Consumer error: {}'.format(msg.error()))
+                        continue
+                    else:
+                        # using avro parser here
+                        if msg.value() is not None:
+                            v = avroSerde.deserialize(msg.value())
+                            k = struct.unpack('>i', msg.key())[0]
+                            print(v)
+                            return(v)
+            finally:
+                consumer.close()
+        def client_consumed():
+            # topic name used by parser
+            KAFKA_TOPIC = "PolicyDraftList"
+            consumer = Consumer({
+                'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
+                'security.protocol': 'SASL_SSL',
+                'sasl.mechanisms': 'PLAIN',
+                'sasl.username': 'IHO7XVPCJCCBZAYX',
+                'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
+                'group.id': str(uuid.uuid1()),  # just generating a groupid, can be replaced by a specific one
+                'auto.offset.reset': 'earliest'
+            })
+            registry_client = SchemaRegistry(
+                "https://psrc-gq7pv.westus2.azure.confluent.cloud",
+                HTTPBasicAuth("MYXDIGGTQEEMLDU2", "azvNIgZyA4TAaOmCLzxvrXqDpaC+lamOvkGm2B7mdYrq9AwKl4IQuUq9Q6WXOp8U"),
+                headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
+            )
+            avroSerde = AvroValueSerde(registry_client, KAFKA_TOPIC)
+            return basic_consume_loop(consumer, ["PolicyDraftList"], avroSerde)
+        
+        # Store the dict from the consumer call
+        v = client_consumed()
+        print(v)
+        # Index into dict for each entry to be rendered
+        POLICYTYPE = v['POLICYTYPE']
+        POLICYNAME = v['POLICYNAME']
+        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
+        POLICYCURRENCY = v['POLICYCURRENCY']
+        PREMIUMPAYMENT = v['PREMIUMPAYMENT']
+        PREMIUMSTRUCTURE = v['PREMIUMSTRUCTURE']
+        GENDER = v['GENDER']
+        CUSTOMERNAME = v['CUSTOMERNAME']
+        CUSTOMERID = v['CUSTOMERID']
+        POLICYSTATUS = v['POLICYSTATUS']
+        COUNTRY = v['COUNTRY']
+        EMAIL = v['EMAIL']
+        CUSTOMER_STATUS = v['CUSTOMER_STATUS']
+        SMOKING_STATUS = v['SMOKING_STATUS']
+        CUSTOMER_STATUS = v['CUSTOMER_STATUS']
+        POLICYTERM = v['POLICYTERM']
+        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
+        DOB = v['DOB']
 
         if 'Accept' in request.form: 
 
-
-            # kwargs = {
-            # 'term': request.form.get('term')+'y',
-            # 'premiumpayment': request.form.get('premiumpayment'),
-            # 'email': session.get('info')[4],
-            # 'premiumstructure': premium_structure,
-            # 'desc': policy_description,
-            # 'ctype': request.form.get('ctype'),
-            # 'name': request.form.get('name'),
-            # 'cus_id': session.get('info')[0]
-            # }
-            # prod = producer.main(**kwargs)
+            kwargs = {
+            'term': POLICYTERM + 'y',
+            'premiumpayment': PREMIUMSTRUCTURE,
+            'email': EMAIL,
+            'premiumstructure': PREMIUMPAYMENT,
+            'desc': POLICYDESCRIPTION,
+            'ctype': POLICYTYPE,
+            'name': CUSTOMERNAME,
+            'cus_id': CUSTOMERID
+            }
+            prod = producer.main(**kwargs)
 
             return render_template("accept.html")
             
-        if 'Decline' in request.form: 
-            # kwargs = {
-            # 'term': request.form.get('term')+'y',
-            # 'premiumpayment': request.form.get('premiumpayment'),
-            # 'email': session.get('info')[4],
-            # 'premiumstructure': premium_structure,
-            # 'desc': policy_description,
-            # 'ctype': request.form.get('ctype'),
-            # 'name': request.form.get('name'),
-            # 'cus_id': session.get('info')[0]
-            # }
-            # prod = producer.main(**kwargs)
-            
+        if 'Decline' in request.form:
+            kwargs = {
+            'term': POLICYTERM+'y',
+            'premiumpayment': PREMIUMSTRUCTURE,
+            'email': EMAIL,
+            'premiumstructure': PREMIUMPAYMENT,
+            'desc': POLICYDESCRIPTION,
+            'ctype': POLICYTYPE,
+            'name': CUSTOMERNAME,
+            'cus_id': CUSTOMERID
+            }
+            prod = producer.main(**kwargs)
             return render_template("decline.html")
 
     if request.method == "GET":
@@ -222,6 +282,9 @@ def index():
         g = v['CUSTOMER_STATUS']
         h = v['SMOKING_STATUS']
         k = v['CUSTOMER_STATUS']
+        POLICYTERM = v['POLICYTERM']
+        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
+        DOB = v['DOB']
         if g == True:
             SMOKING_STATUS = 'Yes'
         else: 
@@ -234,9 +297,6 @@ def index():
             CUSTOMER_STATUS = 'Yes'
         else:
             CUSTOMER_STATUS = 'No'
-        POLICYTERM = v['POLICYTERM']
-        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
-        DOB = v['DOB']
 
         return render_template("index.html", SMOKING_STATUS=SMOKING_STATUS,
         CUSTOMER_STATUS=CUSTOMER_STATUS,EMAIL=EMAIL, COUNTRY=COUNTRY,
