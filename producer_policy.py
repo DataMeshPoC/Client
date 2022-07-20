@@ -86,8 +86,6 @@ def main():
 	producer.poll(0)
 	producer.flush()
 
-	producer
-
 
 if __name__ == '__main__':
 	try:
