@@ -16,26 +16,27 @@
                     <div class="row justify-content-center">
                         <div class="col-4">
                             <h2> POLICY </h2>
-                        <p>Term: {{ POLICYTERM }} </p>
-                        <p>Type: {{ POLICYTYPE }} </p>
-                        <p>Name: {{ POLICYNAME }} </p>
-                        <p>Description: {{ POLICYDESCRIPTION }} </p>
-                        <p>Currency: {{ POLICYCURRENCY }} </p>
-                        <p>Payment: {{ PREMIUMPAYMENT }} </p>
-                        <p>Structure: {{ PREMIUMSTRUCTURE }} </p>
-                        <p>Status: {{ POLICYSTATUS }} </p>
+                        {% for S in smoker %}
+                        <p>Term: {{ S['POLICYTERM'] }} </p>
+                        <p>Type: {{ S['POLICYTYPE'] }} </p>
+                        <p>Name: {{ S['POLICYNAME'] }} </p>
+                        <p>Description: {{ S['POLICYDESCRIPTION'] }} </p>
+                        <p>Currency: {{ S['POLICYCURRENCY'] }} </p>
+                        <p>Payment: {{ S['PREMIUMPAYMENT'] }} </p>
+                        <p>Structure: {{ S['PREMIUMSTRUCTURE'] }} </p>
+                        <p>Status: {{ S['POLICYSTATUS'] }} </p>
                             
                         </div>
                         <div class="col-4">
                             <h2> CUSTOMER </h2>
-                            <p>ID: {{ CUSTOMERID }} </p>
-                            <p>Name: {{ CUSTOMERNAME }} </p>
-                            <p>Gender: {{ GENDER }} </p>
-                            <p>Country: {{ COUNTRY }} </p>
-                            <p>Date of birth: {{ DOB }}</p>
-                            <p>Email:  {{ EMAIL }} </p>
-                            <p>Smoking: {{ SMOKING_STATUS }} </p>
-                            <p>Customer Status: {{ CUSTOMER_STATUS }} </p>  
+                            <p>ID: {{ S['CUSTOMERID'] }} </p>
+                            <p>Name: {{ S['CUSTOMERNAME'] }} </p>
+                            <p>Gender: {{ S['GENDER'] }} </p>
+                            <p>Country: {{ S['COUNTRY'] }} </p>
+                            <p>Date of birth: {{ S['DOB'] }}</p>
+                            <p>Email:  {{ S['EMAIL'] }} </p>
+                            <p>Smoking: {{ S['SMOKING_STATUS'] }} </p>
+                            <p>Customer Status: {{ S['CUSTOMER_STATUS'] }} </p>  
                         </div>
                     </div>
                 </div>
@@ -58,26 +59,28 @@
                 <div class="row justify-content-center">
                     <div class="col-4">
                         <h2> POLICY </h2>
-                    <p>Term: {{ POLICYTERM }} </p>
-                    <p>Type: {{ POLICYTYPE }} </p>
-                    <p>Name: {{ POLICYNAME }} </p>
-                    <p>Description: {{ POLICYDESCRIPTION }} </p>
-                    <p>Currency: {{ POLICYCURRENCY }} </p>
-                    <p>Payment: {{ PREMIUMPAYMENT }} </p>
-                    <p>Structure: {{ PREMIUMSTRUCTURE }} </p>
-                    <p>Status: {{ POLICYSTATUS }} </p>
+                    {% for c in nonSmoker %}
+                    <p>Term: {{ c['POLICYTERM'] }} </p>
+                    <p>Type: {{ c['POLICYTYPE'] }} </p>
+                    <p>Name: {{ c['POLICYNAME'] }} </p>
+                    <p>Description: {{ c['POLICYDESCRIPTION'] }} </p>
+                    <p>Currency: {{ c['POLICYCURRENCY'] }} </p>
+                    <p>Payment: {{ c['PREMIUMPAYMENT'] }} </p>
+                    <p>Structure: {{ c['PREMIUMSTRUCTURE'] }} </p>
+                    <p>Status: {{ c['POLICYSTATUS'] }} </p>
                         
                     </div>
                     <div class="col-4">
                         <h2> CUSTOMER </h2>
-                        <p>ID: {{ ['CUSTOMERID'] }} </p>
-                        <p>Name: {{ CUSTOMERNAME }} </p>
-                        <p>Gender: {{ GENDER }} </p>
-                        <p>Country: {{ COUNTRY }} </p>
-                        <p>Date of birth: {{ DOB }}</p>
-                        <p>Email:  {{ EMAIL }} </p>
-                        <p>Smoking: {{ SMOKING_STATUS }} </p>
-                        <p>Customer Status: {{ CUSTOMER_STATUS }} </p>
+                        <p>ID: {{ c['CUSTOMERID'] }} </p>
+                        <p>Name: {{ c['CUSTOMERNAME'] }} </p>
+                        <p>Gender: {{ c['GENDER'] }} </p>
+                        <p>Country: {{ c['COUNTRY'] }} </p>
+                        <p>Date of birth: {{ c['DOB'] }}</p>
+                        <p>Email:  {{ c['EMAIL'] }} </p>            
+                        <p>Smoking: {{ c['SMOKING_STATUS'] }} </p>
+                        <p>Customer Status: {{ c['CUSTOMER_STATUS'] }} </p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -10,8 +10,6 @@ from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka import SerializingProducer
 from confluent_kafka.serialization import StringSerializer
 from confluent_kafka.serialization import IntegerSerializer
-
-
 import traceback
 
 def acked(err, msg):
@@ -99,3 +97,4 @@ if __name__ == '__main__':
 		main()
 	except Exception:
 		print (traceback.format_exc())
+

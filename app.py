@@ -4,14 +4,12 @@ from threading import Thread, Event
 import uuid  # for consumer group
 import struct
 import datetime
-
 from confluent_kafka import Consumer, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.serialization import IntegerSerializer
 from confluent_avro import SchemaRegistry, AvroValueSerde
 from confluent_avro.schema_registry import HTTPBasicAuth
-
 from helpers import login_required, apology
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -271,16 +269,13 @@ def index():
 
 
         # Store the dict from the consumer call
-        con = client_consumed()
+        v = client_consumed()
         
-        # Change from bools to yes and no
-        CUSTOMER_STATUS = 'Yes' if con['CUSTOMER_STATUS'] else 'No'
-        SMOKING_STATUS = 'Yes' if con['SMOKING_STATUS'] else 'No'
-        
+        # Filter dict into non-smokers and smokers for rendering
+        nonSmoker = dict(filter(lambda elem: elem[0] == False, v.items()))
+        Smoker = dict(filter(lambda elem: elem[0] == True, v.items()))
 
-        return render_template("index.html", con=con, 
-                                CUSTOMER_STATUS=CUSTOMER_STATUS,
-                                SMOKING_STATUS=SMOKING_STATUS)
+        return render_template("index.html", Smoker=Smoker, nonSmoker=nonSmoker)
 
 
 def errorhandler(e):
