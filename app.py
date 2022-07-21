@@ -163,26 +163,6 @@ def index():
         
         # Store the dict from the consumer call
         v = client_consumed()
-        print(v)
-        # Index into dict for each entry to be rendered
-        POLICYTYPE = v['POLICYTYPE']
-        POLICYNAME = v['POLICYNAME']
-        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
-        POLICYCURRENCY = v['POLICYCURRENCY']
-        PREMIUMPAYMENT = v['PREMIUMPAYMENT']
-        PREMIUMSTRUCTURE = v['PREMIUMSTRUCTURE']
-        GENDER = v['GENDER']
-        CUSTOMERNAME = v['CUSTOMERNAME']
-        CUSTOMERID = v['CUSTOMERID']
-        POLICYSTATUS = v['POLICYSTATUS']
-        COUNTRY = v['COUNTRY']
-        EMAIL = v['EMAIL']
-        CUSTOMER_STATUS = v['CUSTOMER_STATUS']
-        SMOKING_STATUS = v['SMOKING_STATUS']
-        CUSTOMER_STATUS = v['CUSTOMER_STATUS']
-        POLICYTERM = v['POLICYTERM']
-        POLICYDESCRIPTION = v['POLICYDESCRIPTION']
-        DOB = v['DOB']
 
         # producer configs 
         def acked(err, msg):
@@ -215,16 +195,16 @@ def index():
             """
 
             message = dict(
-                ID=456,
-                CUSTOMEREMAIL='sagittis.placerat@hotmail.edu',
-                TERM='20y',
-                TYPE='life',
-                NAME='life policy 123 20y ',
-                DESCRIPTION='test description',
-                CURRENCY='HKD',
-                PREMIUMPAYMENT='monthly',
-                PREMIUMSTRUCTURE='premium structure',
-                STATUS='Draft'
+                ID=v['CUSTOMERID'],
+                CUSTOMEREMAIL=v['EMAIL'],
+                TERM=v['POLICYTERM'],
+                TYPE=v['POLICYTYPE'],
+                NAME=v['POLICYNAME'],
+                DESCRIPTION=v['POLICYDESCRIPTION'],
+                CURRENCY=v['POLICYCURRENCY'],
+                PREMIUMPAYMENT=v['PREMIUMPAYMENT'],
+                PREMIUMSTRUCTURE=v['PREMIUMSTRUCTURE'],
+                STATUS=v['SMOKING_STATUS']
             )
 
             sr = SchemaRegistryClient({
@@ -260,14 +240,14 @@ def index():
         if 'Accept' in request.form: 
 
             kwargs = {
-            'term': POLICYTERM + 'y',
-            'premiumpayment': PREMIUMSTRUCTURE,
-            'email': EMAIL,
-            'premiumstructure': PREMIUMPAYMENT,
-            'desc': POLICYDESCRIPTION,
-            'ctype': POLICYTYPE,
-            'name': CUSTOMERNAME,
-            'cus_id': CUSTOMERID
+            'term': v['POLICYTERM'] + 'y',
+            'premiumpayment': v['PREMIUMSTRUCTURE'],
+            'email': v['EMAIL'],
+            'premiumstructure': v['PREMIUMPAYMENT'],
+            'desc': v['POLICYDESCRIPTION'],
+            'ctype': v['POLICYTYPE'],
+            'name': v['CUSTOMERNAME'],
+            'cus_id': v['CUSTOMERID']
             }
             prod = producer(**kwargs)
 
@@ -275,14 +255,14 @@ def index():
             
         if 'Decline' in request.form:
             kwargs = {
-            'term': POLICYTERM+'y',
-            'premiumpayment': PREMIUMSTRUCTURE,
-            'email': EMAIL,
-            'premiumstructure': PREMIUMPAYMENT,
-            'desc': POLICYDESCRIPTION,
-            'ctype': POLICYTYPE,
-            'name': CUSTOMERNAME,
-            'cus_id': CUSTOMERID
+            'term': v['POLICYTERM'] + 'y',
+            'premiumpayment': v['PREMIUMSTRUCTURE'],
+            'email': v['EMAIL'],
+            'premiumstructure': v['PREMIUMPAYMENT'],
+            'desc': v['POLICYDESCRIPTION'],
+            'ctype': v['POLICYTYPE'],
+            'name': v['CUSTOMERNAME'],
+            'cus_id': v['CUSTOMERID']
             }
             prod = producer(**kwargs)
             return render_template("decline.html")
@@ -332,7 +312,7 @@ def index():
         
         # Store the dict from the consumer call
         v = client_consumed()
-        print(v)
+        
         # Index into dict for each entry to be rendered
         POLICYTYPE = v['POLICYTYPE']
         POLICYNAME = v['POLICYNAME']

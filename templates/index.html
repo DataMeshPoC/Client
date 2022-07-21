@@ -6,12 +6,55 @@
 {% endblock %}
 
 {% block main %}
-<main class="container py-5 text-center"
-    <form action="/" method="post"
+<main>
+
+    <div> class="container py-5 text-center"
+        <form action="/" method="post" id="form" onsubmit="return myFunction()"></form>>
+            <div class="px-4 py-5 my-5 text-center">
+                <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
+                <div class="container" id="first_div">
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <h2> POLICY </h2>
+                        <p>Term: {{ POLICYTERM }} </p>
+                        <p>Type: {{ POLICYTYPE }} </p>
+                        <p>Name: {{ POLICYNAME }} </p>
+                        <p>Description: {{ POLICYDESCRIPTION }} </p>
+                        <p>Currency: {{ POLICYCURRENCY }} </p>
+                        <p>Payment: {{ PREMIUMPAYMENT }} </p>
+                        <p>Structure: {{ PREMIUMSTRUCTURE }} </p>
+                        <p>Status: {{ POLICYSTATUS }} </p>
+                            
+                        </div>
+                        <div class="col-4">
+                            <h2> CUSTOMER </h2>
+                            <p>ID: {{ CUSTOMERID }} </p>
+                            <p>Name: {{ CUSTOMERNAME }} </p>
+                            <p>Gender: {{ GENDER }} </p>
+                            <p>Country: {{ COUNTRY }} </p>
+                            <p>Date of birth: {{ DOB }}</p>
+                            <p>Email:  {{ EMAIL }} </p>
+                            <p>Smoking: {{ SMOKING_STATUS }} </p>
+                            <p>Customer Status: {{ CUSTOMER_STATUS }} </p>  
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        <script>
+        function myFunction() {
+            alert("The form was submitted");
+            document.getElementById("form" ).style.display = "none";  
+            document.getElementById("first_div" ).style.visibility = "visible";
+        alert("after"); 
+        return false;
+        }
+        </script>
+        </form>
+
+        <form action="/" method="post" id="form2" onsubmit="return myFunction()"></form>>
         <div class="px-4 py-5 my-5 text-center">
-            <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>
-                        
-            <div class="container">
+            <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
+            <div class="container" id="snd_div">
                 <div class="row justify-content-center">
                     <div class="col-4">
                         <h2> POLICY </h2>
@@ -23,11 +66,11 @@
                     <p>Payment: {{ PREMIUMPAYMENT }} </p>
                     <p>Structure: {{ PREMIUMSTRUCTURE }} </p>
                     <p>Status: {{ POLICYSTATUS }} </p>
-                          
+                        
                     </div>
                     <div class="col-4">
                         <h2> CUSTOMER </h2>
-                        <p>ID: {{ CUSTOMERID }} </p>
+                        <p>ID: {{ ['CUSTOMERID'] }} </p>
                         <p>Name: {{ CUSTOMERNAME }} </p>
                         <p>Gender: {{ GENDER }} </p>
                         <p>Country: {{ COUNTRY }} </p>
@@ -38,15 +81,16 @@
                     </div>
                 </div>
             </div>
-
-                <form action="" method="POST">
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
-                    <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
-                </div>
-                </form>
-            </div>
-        </div>
+        </div>  
+        <script>
+        function myFunction() {
+            alert("The form was submitted");
+            document.getElementById("form2" ).style.display = "none";  
+            document.getElementById("snd_div" ).style.visibility = "visible";
+        alert("after"); 
+        return false;
+        }
+        </script>
     </form>
 </main>
 {% endblock %}
