@@ -269,13 +269,29 @@ def index():
 
 
         # Store the dict from the consumer call
-        v = client_consumed()
-        
-        # Filter dict into non-smokers and smokers for rendering
-        nonSmoker = dict(filter(lambda elem: elem[0] == False, v.items()))
-        Smoker = dict(filter(lambda elem: elem[0] == True, v.items()))
+        con = client_consumed()
+        print(type(con))
 
-        return render_template("index.html", Smoker=Smoker, nonSmoker=nonSmoker)
+        
+        
+        POLICYTYPE = con['POLICYTYPE']
+        POLICYNAME = con['POLICYNAME']
+        POLICYDESCRIPTION = con['POLICYDESCRIPTION']
+        POLICYCURRENCY = con['POLICYCURRENCY']
+        PREMIUMPAYMENT = con['PREMIUMPAYMENT']
+        PREMIUMSTRUCTURE = con['PREMIUMSTRUCTURE']
+        GENDER = con['GENDER']
+        CUSTOMERNAME = con['CUSTOMERNAME']
+        CUSTOMERID = con['CUSTOMERID']
+        POLICYSTATUS = con['POLICYSTATUS']
+        COUNTRY = con['COUNTRY']
+        EMAIL = con['EMAIL']
+        POLICYTERM = con['POLICYTERM']
+        DOB = con['DOB']
+        
+        return render_template("index.html", 
+        
+        )
 
 
 def errorhandler(e):

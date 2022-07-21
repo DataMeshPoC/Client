@@ -8,15 +8,15 @@
 {% block main %}
 <main>
 
-    <div> class="container py-5 text-center"
-        <form action="/" method="post" id="form" onsubmit="return myFunction()"></form>>
+    <div class="container py-5 text-center">
+        <form action="/" method="post" id="form" onsubmit="return myFunction()">
             <div class="px-4 py-5 my-5 text-center">
                 <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
                 <div class="container" id="first_div">
                     <div class="row justify-content-center">
                         <div class="col-4">
                             <h2> POLICY </h2>
-                        {% for S in smoker %}
+                        {% for S in Smoker %}
                         <p>Term: {{ S['POLICYTERM'] }} </p>
                         <p>Type: {{ S['POLICYTYPE'] }} </p>
                         <p>Name: {{ S['POLICYNAME'] }} </p>
@@ -37,10 +37,12 @@
                             <p>Email:  {{ S['EMAIL'] }} </p>
                             <p>Smoking: {{ S['SMOKING_STATUS'] }} </p>
                             <p>Customer Status: {{ S['CUSTOMER_STATUS'] }} </p>  
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
-            </div>  
+            </div>
+        </form>  
         <script>
         function myFunction() {
             alert("The form was submitted");
@@ -52,7 +54,7 @@
         </script>
         </form>
 
-        <form action="/" method="post" id="form2" onsubmit="return myFunction()"></form>>
+        <form action="/" method="post" id="form2" onsubmit="return myFunction()"></form>
         <div class="px-4 py-5 my-5 text-center">
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
             <div class="container" id="snd_div">
@@ -60,7 +62,7 @@
                     <div class="col-4">
                         <h2> POLICY </h2>
                     {% for c in nonSmoker %}
-                    <p>Term: {{ c['POLICYTERM'] }} </p>
+                    <p>Term: {{ c.POLICYTERM }} </p>
                     <p>Type: {{ c['POLICYTYPE'] }} </p>
                     <p>Name: {{ c['POLICYNAME'] }} </p>
                     <p>Description: {{ c['POLICYDESCRIPTION'] }} </p>
@@ -80,7 +82,7 @@
                         <p>Email:  {{ c['EMAIL'] }} </p>            
                         <p>Smoking: {{ c['SMOKING_STATUS'] }} </p>
                         <p>Customer Status: {{ c['CUSTOMER_STATUS'] }} </p>
-                        {% endfor %}
+                    {% endfor %}
                     </div>
                 </div>
             </div>

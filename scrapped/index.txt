@@ -1,15 +1,2 @@
 indexing text files that are unneeded, stored for later  
-        POLICYTYPE = con['POLICYTYPE']
-        POLICYNAME = con['POLICYNAME']
-        POLICYDESCRIPTION = con['POLICYDESCRIPTION']
-        POLICYCURRENCY = con['POLICYCURRENCY']
-        PREMIUMPAYMENT = con['PREMIUMPAYMENT']
-        PREMIUMSTRUCTURE = con['PREMIUMSTRUCTURE']
-        GENDER = con['GENDER']
-        CUSTOMERNAME = con['CUSTOMERNAME']
-        CUSTOMERID = con['CUSTOMERID']
-        POLICYSTATUS = con['POLICYSTATUS']
-        COUNTRY = con['COUNTRY']
-        EMAIL = con['EMAIL']
-        POLICYTERM = con['POLICYTERM']
-        DOB = con['DOB']
+        
