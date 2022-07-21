@@ -192,8 +192,6 @@ def index():
             producer.poll(0)
             producer.flush()
 
-        if 'Accept' in request.form: 
-
             kwargs = {
             'term': v['POLICYTERM'] + 'y',
             'premiumpayment': v['PREMIUMSTRUCTURE'],
@@ -204,23 +202,21 @@ def index():
             'name': v['CUSTOMERNAME'],
             'cus_id': v['CUSTOMERID']
             }
-            #producer(uw_result, status)
 
+        if 'Accept' in request.form: 
+            #producer(uw_result, status)
             return render_template("accept.html")
             
         if 'Decline' in request.form:
-            kwargs = {
-            'term': v['POLICYTERM'] + 'y',
-            'premiumpayment': v['PREMIUMSTRUCTURE'],
-            'email': v['EMAIL'],
-            'premiumstructure': v['PREMIUMPAYMENT'],
-            'desc': v['POLICYDESCRIPTION'],
-            'ctype': v['POLICYTYPE'],
-            'name': v['CUSTOMERNAME'],
-            'cus_id': v['CUSTOMERID']
-            }
             #producer(uw_result, status)
+            return render_template("decline.html")
 
+        if 'Accept' in request.form: 
+                    #producer(uw_result, status)
+                    return render_template("accept.html")
+            
+        if 'Decline1' in request.form:
+            #producer(uw_result, status)
             return render_template("decline.html")
 
     if request.method == "GET":
@@ -271,6 +267,7 @@ def index():
         # Store the dict from the consumer call
         con = client_consumed()
 
+
         # Split the dictionary into a list of strings to be rendered
         POLICYTYPE = con['POLICYTYPE'].split("\n")
         POLICYNAME = con['POLICYNAME'].split("\n")
@@ -289,10 +286,7 @@ def index():
         CUSTOMERID = str(con['CUSTOMERID']).split("\n")
         CUSTOMER_STATUS = str(con['CUSTOMER_STATUS']).split("\n")
         
-        return render_template("index.html", 
-        
-        )
-
+        return render_template("index.html",PREMIUMPAYMENT=PREMIUMPAYMENT,PREMIUMSTRUCTURE=PREMIUMSTRUCTURE,GENDER=GENDER,CUSTOMERNAME=CUSTOMERNAME,POLICYSTATUS=POLICYSTATUS,COUNTRY=COUNTRY,EMAIL=EMAIL,DOB=DOB,POLICYTERM=POLICYTERM,SMOKING_STATUS=SMOKING_STATUS,CUSTOMERID=CUSTOMERID,CUSTOMER_STATUS=CUSTOMER_STATUS)
 
 def errorhandler(e):
     """Handle error"""

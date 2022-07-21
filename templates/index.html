@@ -10,83 +10,143 @@
 
     <div class="container py-5 text-center">
         <form action="/" method="post" id="form" onsubmit="return myFunction()">
-            <div class="px-4 py-5 my-5 text-center">
+            <div class="text-center">
                 <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
                 <div class="container" id="first_div">
                     <div class="row justify-content-center">
                         <div class="col-4">
                             <h2> POLICY </h2>
-                        {% for S in Smoker %}
-                        <p>Term: {{ S['POLICYTERM'] }} </p>
-                        <p>Type: {{ S['POLICYTYPE'] }} </p>
-                        <p>Name: {{ S['POLICYNAME'] }} </p>
-                        <p>Description: {{ S['POLICYDESCRIPTION'] }} </p>
-                        <p>Currency: {{ S['POLICYCURRENCY'] }} </p>
-                        <p>Payment: {{ S['PREMIUMPAYMENT'] }} </p>
-                        <p>Structure: {{ S['PREMIUMSTRUCTURE'] }} </p>
-                        <p>Status: {{ S['POLICYSTATUS'] }} </p>
-                            
-                        </div>
-                        <div class="col-4">
-                            <h2> CUSTOMER </h2>
-                            <p>ID: {{ S['CUSTOMERID'] }} </p>
-                            <p>Name: {{ S['CUSTOMERNAME'] }} </p>
-                            <p>Gender: {{ S['GENDER'] }} </p>
-                            <p>Country: {{ S['COUNTRY'] }} </p>
-                            <p>Date of birth: {{ S['DOB'] }}</p>
-                            <p>Email:  {{ S['EMAIL'] }} </p>
-                            <p>Smoking: {{ S['SMOKING_STATUS'] }} </p>
-                            <p>Customer Status: {{ S['CUSTOMER_STATUS'] }} </p>  
-                            {% endfor %}
+                        {% for term in POLICYTERM %}
+                    <p>Term: {{ term }} </p>
+                    {% endfor %}
+                    {% for typ in POLICYTYPE %}
+                    <p>Type: {{ typ }} </p>
+                    {% endfor %}
+                    {% for Name in POLICYNAME %}
+                    <p>Name: {{ name }} </p>
+                    {% endfor %}
+                    {% for des in POLICYDESCRIPTION %}
+                    <p>Description: {{ des }} </p>
+                    {% endfor %}
+                    {% for cur in POLICYCURRENCY %}
+                    <p>Currency: {{ cur }} </p>
+                    {% endfor %}
+                    {% for pay in PREMIUMPAYMENT %}
+                    <p>Payment: {{ pay }} </p>
+                    {% endfor %}
+                    {% for struc in PREMIUMSTRUCTURE %}
+                    <p>Structure: {{ struc }} </p>
+                    {% endfor %}
+                    {% for stat in POLICYSTATUS %}
+                    <p>Status: {{ stat }} </p>
+                    {% endfor %}
+                        
+                    </div>
+                    <div class="col-4">
+                        <h2> CUSTOMER </h2>
+                        {% for nom in CUSTOMERNAME %}
+                        <p>Name: {{ nom }} </p>
+                        {% endfor %}
+                        {% for ge in GENDER %}
+                        <p>Gender: {{ ge }} </p>
+                        {% endfor %}
+                        {% for cou in COUNTRY %}
+                        <p>Country: {{ cou }} </p>
+                        {% endfor %}
+                        {% for d in DOB %}
+                        <p>Date of birth: {{ d }}</p>
+                        {% endfor %}
+                        {% for em in EMAIL %}
+                        <p>Email:  {{ em }} </p>    
+                        {% endfor %}     
+                        {% for smoke in SMOKING_STATUS %}
+                        <p>Smoking: {{ smoke }} </p>
+                        {% endfor %}
+                        {% for state in CUSTOMER_STATUS %}
+                        <p>Customer Status: {{ state }} </p>
+                        {% endfor %}
                         </div>
                     </div>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
+                        <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button> 
                 </div>
-            </div>
-        </form>  
+            </div> 
+        </div> 
+            
         <script>
         function myFunction() {
-            alert("The form was submitted");
+            alert("Application received");
             document.getElementById("form" ).style.display = "none";  
             document.getElementById("first_div" ).style.visibility = "visible";
-        alert("after"); 
         return false;
         }
         </script>
         </form>
 
-        <form action="/" method="post" id="form2" onsubmit="return myFunction()"></form>
+        <form action="/" method="post" id="form2" onsubmit="return myFunction()">
         <div class="px-4 py-5 my-5 text-center">
             <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
             <div class="container" id="snd_div">
                 <div class="row justify-content-center">
                     <div class="col-4">
                         <h2> POLICY </h2>
-                    {% for c in nonSmoker %}
-                    <p>Term: {{ c.POLICYTERM }} </p>
-                    <p>Type: {{ c['POLICYTYPE'] }} </p>
-                    <p>Name: {{ c['POLICYNAME'] }} </p>
-                    <p>Description: {{ c['POLICYDESCRIPTION'] }} </p>
-                    <p>Currency: {{ c['POLICYCURRENCY'] }} </p>
-                    <p>Payment: {{ c['PREMIUMPAYMENT'] }} </p>
-                    <p>Structure: {{ c['PREMIUMSTRUCTURE'] }} </p>
-                    <p>Status: {{ c['POLICYSTATUS'] }} </p>
+                    {% for term in POLICYTERM %}
+                    <p>Term: {{ term }} </p>
+                    {% endfor %}
+                    {% for typ in POLICYTYPE %}
+                    <p>Type: {{ typ }} </p>
+                    {% endfor %}
+                    {% for Name in POLICYNAME %}
+                    <p>Name: {{ name }} </p>
+                    {% endfor %}
+                    {% for des in POLICYDESCRIPTION %}
+                    <p>Description: {{ des }} </p>
+                    {% endfor %}
+                    {% for cur in POLICYCURRENCY %}
+                    <p>Currency: {{ cur }} </p>
+                    {% endfor %}
+                    {% for pay in PREMIUMPAYMENT %}
+                    <p>Payment: {{ pay }} </p>
+                    {% endfor %}
+                    {% for struc in PREMIUMSTRUCTURE %}
+                    <p>Structure: {{ struc }} </p>
+                    {% endfor %}
+                    {% for stat in POLICYSTATUS %}
+                    <p>Status: {{ stat }} </p>
+                    {% endfor %}
                         
                     </div>
                     <div class="col-4">
                         <h2> CUSTOMER </h2>
-                        <p>ID: {{ c['CUSTOMERID'] }} </p>
-                        <p>Name: {{ c['CUSTOMERNAME'] }} </p>
-                        <p>Gender: {{ c['GENDER'] }} </p>
-                        <p>Country: {{ c['COUNTRY'] }} </p>
-                        <p>Date of birth: {{ c['DOB'] }}</p>
-                        <p>Email:  {{ c['EMAIL'] }} </p>            
-                        <p>Smoking: {{ c['SMOKING_STATUS'] }} </p>
-                        <p>Customer Status: {{ c['CUSTOMER_STATUS'] }} </p>
-                    {% endfor %}
+                        {% for nom in CUSTOMERNAME %}
+                        <p>Name: {{ nom }} </p>
+                        {% endfor %}
+                        {% for ge in GENDER %}
+                        <p>Gender: {{ ge }} </p>
+                        {% endfor %}
+                        {% for cou in COUNTRY %}
+                        <p>Country: {{ cou }} </p>
+                        {% endfor %}
+                        {% for d in DOB %}
+                        <p>Date of birth: {{ d }}</p>
+                        {% endfor %}
+                        {% for em in EMAIL %}
+                        <p>Email:  {{ em }} </p>    
+                        {% endfor %}     
+                        {% for smoke in SMOKING_STATUS %}
+                        <p>Smoking: {{ smoke }} </p>
+                        {% endfor %}
+                        {% for state in CUSTOMER_STATUS %}
+                        <p>Customer Status: {{ state }} </p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>  
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button type="submit" name="Accept2" id="Accept2" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
+            <button type="submit" name="Decline2" id="Decline2" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
         <script>
         function myFunction() {
             alert("The form was submitted");

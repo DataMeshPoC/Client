@@ -31,11 +31,8 @@ def basic_consume_loop(consumer, topics, avroSerde):
                 # using avro parser here
                 if msg.value() is not None:
                     v = avroSerde.deserialize(msg.value())
-                    k = struct.unpack('>i', msg.key())
-                    j = v['SMOKING_STATUS']
-                    # .split("\n")
-                    # print(j)
-                    # print(type(j))
+                    k = struct.unpack('>i', msg.key())  
+                    EMAIL = v['EMAIL'].split("\n")
                     print(v)
                     
     finally:
