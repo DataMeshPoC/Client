@@ -9,153 +9,104 @@
 <main>
 
     <div class="container py-5 text-center">
-        <form action="/" method="post" id="form" onsubmit="return myFunction()">
+        {% for message in messages %}
+        <form action="/" method="POST" id="form" >
             <div class="text-center">
                 <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
                 <div class="container" id="first_div">
                     <div class="row justify-content-center">
                         <div class="col-4">
-                            <h2> POLICY </h2>
-                        {% for term in POLICYTERM %}
-                    <p>Term: {{ term }} </p>
-                    {% endfor %}
-                    {% for typ in POLICYTYPE %}
-                    <p>Type: {{ typ }} </p>
-                    {% endfor %}
-                    {% for Name in POLICYNAME %}
-                    <p>Name: {{ name }} </p>
-                    {% endfor %}
-                    {% for des in POLICYDESCRIPTION %}
-                    <p>Description: {{ des }} </p>
-                    {% endfor %}
-                    {% for cur in POLICYCURRENCY %}
-                    <p>Currency: {{ cur }} </p>
-                    {% endfor %}
-                    {% for pay in PREMIUMPAYMENT %}
-                    <p>Payment: {{ pay }} </p>
-                    {% endfor %}
-                    {% for struc in PREMIUMSTRUCTURE %}
-                    <p>Structure: {{ struc }} </p>
-                    {% endfor %}
-                    {% for stat in POLICYSTATUS %}
-                    <p>Status: {{ stat }} </p>
-                    {% endfor %}
-                        
-                    </div>
-                    <div class="col-4">
-                        <h2> CUSTOMER </h2>
-                        {% for nom in CUSTOMERNAME %}
-                        <p>Name: {{ nom }} </p>
-                        {% endfor %}
-                        {% for ge in GENDER %}
-                        <p>Gender: {{ ge }} </p>
-                        {% endfor %}
-                        {% for cou in COUNTRY %}
-                        <p>Country: {{ cou }} </p>
-                        {% endfor %}
-                        {% for d in DOB %}
-                        <p>Date of birth: {{ d }}</p>
-                        {% endfor %}
-                        {% for em in EMAIL %}
-                        <p>Email:  {{ em }} </p>    
-                        {% endfor %}     
-                        {% for smoke in SMOKING_STATUS %}
-                        <p>Smoking: {{ smoke }} </p>
-                        {% endfor %}
-                        {% for state in CUSTOMER_STATUS %}
-                        <p>Customer Status: {{ state }} </p>
-                        {% endfor %}
+                            <h2> Policy Information </h2>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="policy_id">ID:</label>
+                                    <input class="form-control" type="text" id="policy_id" name="policy_id" value={{message['POLICYID']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="policy_name">Name:</label>
+                                    <input class="form-control" type="text" id="policy_name" name="policy_name" value={{message['POLICYNAME']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="policy_term">Term:</label>
+                                    <input class="form-control" type="text" id="policy_term" name="policy_term" value={{message['POLICYTERM']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class="form-check-label" for="policy_type">Type:</label>
+                                    <input class="form-control" type="text" id="policy_type" name="policy_type" value={{message['POLICYTYPE']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="policy_desc">Description:</label>
+                                    <input class="form-control" type="text" id="policy_desc" name="policy_desc" value={{message['POLICYDESCRIPTION']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class="form-check-label" for="premiumpayment">Premium:</label>
+                                    <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value={{message['PREMIUMPAYMENT']}} readonly>
+                                    <span class="input-group-text">HKD</span>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="premiumstructure">Premium Structure:</label>
+                                    <input class="form-control" type="text" id="premiumstructure" name="premiumstructure" value={{message['PREMIUMSTRUCTURE']}} readonly>
+                                </div>
+
+                        </div>
+                        <div class="col-4">
+                            <h2> Customer Information </h2>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="cust_id">Customer ID:</label>
+                                    <input class="form-control" type="text" id="cust_id" name="cust_id" value={{message['CUSTOMERID']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="cust_name">Name:</label>
+                                    <input class="form-control" type="text" id="cust_name" name="cust_name" value={{message['CUSTOMERNAME']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="gender">Gender:</label>
+                                    <input class="form-control" type="text" id="gender" name="gender" value={{message['GENDER']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="dob">Date of birth:</label>
+                                    <input class="form-control" type="text" id="dob" name="dob" value={{message['DOB']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="country">Country:</label>
+                                    <input class="form-control" type="text" id="country" name="country" value={{message['COUNTRY']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="email">Email:</label>
+                                    <input class="form-control" type="text" id="email" name="email" value={{message['EMAIL']}} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="smoking_status">Smoker:</label>
+                                    <input class="form-control" type="text" id="smoking_status" name="smoking_status" value={% if message['SMOKING_STATUS'] %} Yes {% else %} No {% endif %} readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <label class=form-check-label" for="customer_status">Customer Status:</label>
+                                    <input class="form-control" type="text" id="customer_status" name="customer_status" value={{message['CUSTOMER_STATUS']}} readonly>
+                                </div>
+
+                        </div>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <textarea class="form-control" rows = "3" cols="10"  name = "reason" placeholder="Please explain the reason of the underwriting decision..."></textarea>
+                        </div>
+                        <br>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
+                            <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
                         </div>
                     </div>
-                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                        <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
-                        <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button> 
                 </div>
-            </div> 
-        </div> 
-            
-        <script>
-        function myFunction() {
-            alert("Application received");
-            document.getElementById("form" ).style.display = "none";  
-            document.getElementById("first_div" ).style.visibility = "visible";
-        return false;
-        }
-        </script>
-        </form>
-
-        <form action="/" method="POST" id="form2" onsubmit="return myFunction()">
-        <div class="px-4 py-5 my-5 text-center">
-            <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
-            <div class="container" id="snd_div">
-                <div class="row justify-content-center">
-                    <div class="col-4">
-                        <h2> POLICY </h2>
-                    {% for term in POLICYTERM %}
-                    <p>Term: {{ term }} </p>
-                    {% endfor %}
-                    {% for typ in POLICYTYPE %}
-                    <p>Type: {{ typ }} </p>
-                    {% endfor %}
-                    {% for Name in POLICYNAME %}
-                    <p>Name: {{ name }} </p>
-                    {% endfor %}
-                    {% for des in POLICYDESCRIPTION %}
-                    <p>Description: {{ des }} </p>
-                    {% endfor %}
-                    {% for cur in POLICYCURRENCY %}
-                    <p>Currency: {{ cur }} </p>
-                    {% endfor %}
-                    {% for pay in PREMIUMPAYMENT %}
-                    <p>Payment: {{ pay }} </p>
-                    {% endfor %}
-                    {% for struc in PREMIUMSTRUCTURE %}
-                    <p>Structure: {{ struc }} </p>
-                    {% endfor %}
-                    {% for stat in POLICYSTATUS %}
-                    <p>Status: {{ stat }} </p>
-                    {% endfor %}
-                        
-                    </div>
-                    <div class="col-4">
-                        <h2> CUSTOMER </h2>
-                        {% for nom in CUSTOMERNAME %}
-                        <p>Name: {{ nom }} </p>
-                        {% endfor %}
-                        {% for ge in GENDER %}
-                        <p>Gender: {{ ge }} </p>
-                        {% endfor %}
-                        {% for cou in COUNTRY %}
-                        <p>Country: {{ cou }} </p>
-                        {% endfor %}
-                        {% for d in DOB %}
-                        <p>Date of birth: {{ d }}</p>
-                        {% endfor %}
-                        {% for em in EMAIL %}
-                        <p>Email:  {{ em }} </p>    
-                        {% endfor %}     
-                        {% for smoke in SMOKING_STATUS %}
-                        <p>Smoking: {{ smoke }} </p>
-                        {% endfor %}
-                        {% for state in CUSTOMER_STATUS %}
-                        <p>Customer Status: {{ state }} </p>
-                        {% endfor %}
-                    </div>
-                </div>
+                <!--
+                <script>
+                function myFunction() {
+                    alert("Application received");
+                    document.getElementById("form" ).style.display = "none";
+                    document.getElementById("first_div" ).style.visibility = "visible";
+                return false;
+                }
+                -->
+                </script>
             </div>
-        </div>  
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button type="submit" name="Accept2" id="Accept2" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
-            <button type="submit" name="Decline2" id="Decline2" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
-        <script>
-        function myFunction() {
-            alert("The form was submitted");
-            document.getElementById("form2" ).style.display = "none";  
-            document.getElementById("snd_div" ).style.visibility = "visible";
-        alert("after"); 
-        return false;
-        }
-        </script>
-    </form>
+        </form>
+        <hr>
+        {% endfor %}
 </main>
 {% endblock %}
