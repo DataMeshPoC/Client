@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from hashlib import new
 import uuid  # for consumer group
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import struct
@@ -30,10 +31,13 @@ def basic_consume_loop(consumer, topics, avroSerde):
                 # using avro parser here
                 if msg.value() is not None:
                     v = avroSerde.deserialize(msg.value())
-                    k = struct.unpack('>i', msg.key())[0]
-                    s = print(v)
-                    email = v['EMAIL']
-                    print(type(email))
+                    k = struct.unpack('>i', msg.key())
+                    j = v['SMOKING_STATUS']
+                    # .split("\n")
+                    # print(j)
+                    # print(type(j))
+                    print(v)
+                    
     finally:
         running = False
         consumer.close()

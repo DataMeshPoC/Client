@@ -241,11 +241,11 @@ def index():
                         # using avro parser here
                         if msg.value() is not None:
                             v = avroSerde.deserialize(msg.value())
-                            k = struct.unpack('>i', msg.key())[0]
-                            print(v)
-                            return(v)
+                            k = struct.unpack('>i', msg.key())
+                            running = False
+                            
             finally:
-                consumer.close()
+                return(v)
 
         def client_consumed():
             # topic name used by parser
@@ -270,24 +270,24 @@ def index():
 
         # Store the dict from the consumer call
         con = client_consumed()
-        print(type(con))
 
-        
-        
-        POLICYTYPE = con['POLICYTYPE']
-        POLICYNAME = con['POLICYNAME']
-        POLICYDESCRIPTION = con['POLICYDESCRIPTION']
-        POLICYCURRENCY = con['POLICYCURRENCY']
-        PREMIUMPAYMENT = con['PREMIUMPAYMENT']
-        PREMIUMSTRUCTURE = con['PREMIUMSTRUCTURE']
-        GENDER = con['GENDER']
-        CUSTOMERNAME = con['CUSTOMERNAME']
-        CUSTOMERID = con['CUSTOMERID']
-        POLICYSTATUS = con['POLICYSTATUS']
-        COUNTRY = con['COUNTRY']
-        EMAIL = con['EMAIL']
-        POLICYTERM = con['POLICYTERM']
-        DOB = con['DOB']
+        # Split the dictionary into a list of strings to be rendered
+        POLICYTYPE = con['POLICYTYPE'].split("\n")
+        POLICYNAME = con['POLICYNAME'].split("\n")
+        POLICYDESCRIPTION = con['POLICYDESCRIPTION'].split("\n")
+        POLICYCURRENCY = con['POLICYCURRENCY'].split("\n")
+        PREMIUMPAYMENT = str(con['PREMIUMPAYMENT']).split("\n")
+        PREMIUMSTRUCTURE = con['PREMIUMSTRUCTURE'].split("\n")
+        GENDER = con['GENDER'].split("\n")
+        CUSTOMERNAME = con['CUSTOMERNAME'].split("\n")
+        POLICYSTATUS = con['POLICYSTATUS'].split("\n")
+        COUNTRY = con['COUNTRY'].split("\n")
+        EMAIL = con['EMAIL'].split("\n")
+        DOB = (con['DOB'].strftime("%m/%d/%Y")).split("\n")
+        POLICYTERM = con['POLICYTERM'].split("\n")
+        SMOKING_STATUS = str(con['SMOKING_STATUS']).split("\n")
+        CUSTOMERID = str(con['CUSTOMERID']).split("\n")
+        CUSTOMER_STATUS = str(con['CUSTOMER_STATUS']).split("\n")
         
         return render_template("index.html", 
         
