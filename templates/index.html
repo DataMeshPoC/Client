@@ -6,92 +6,124 @@
 {% endblock %}
 
 {% block main %}
+<style>
+    .wrapper {
+      background-color: whitesmoke;
+      list-style-type: none;
+      padding: 0;
+      border-radius: 4px;
+    }
+    .form-row {
+      display: flex;
+      justify-content: flex-end;
+      padding: .5em;
+    }
+    .form-row > label {
+      padding: .5em 1em .5em 0;
+      flex: 1;
+    }
+    .form-row > input {
+      flex: 2;
+    }
+    .form-row > input,
+    .form-row > button {
+      padding: .5em;
+    }
+    .form-row > button {
+     background: gray;
+     color: white;
+     border: 0;
+    }
+</style>
 <main>
-
     <div class="container py-5 text-center">
         {% for message in messages %}
         <form action="/" method="POST" id="form" >
             <div class="text-center">
-                <h1 class="display-5 fw-bold">Prospective Customer Information:</h1>         
+                <h2 class="display-5 fw-bold">Prospective Customer Information:</h1>
+                <br>           
                 <div class="container" id="first_div">
                     <div class="row justify-content-center">
                         <div class="col-4">
-                            <h2> Policy Information </h2>
-                                <div class="input-group mb-3">
+                        <ul class="wrapper">
+                            <h3> Policy Information </h2>
+                                <li class="form-row">
                                     <label class=form-check-label" for="policy_id">ID:</label>
                                     <input class="form-control" type="text" id="policy_id" name="policy_id" value={{message['POLICYID']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="policy_name">Name:</label>
                                     <input class="form-control" type="text" id="policy_name" name="policy_name" value={{message['POLICYNAME']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="policy_term">Term:</label>
                                     <input class="form-control" type="text" id="policy_term" name="policy_term" value={{message['POLICYTERM']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class="form-check-label" for="policy_type">Type:</label>
                                     <input class="form-control" type="text" id="policy_type" name="policy_type" value={{message['POLICYTYPE']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="policy_desc">Description:</label>
                                     <input class="form-control" type="text" id="policy_desc" name="policy_desc" value={{message['POLICYDESCRIPTION']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class="form-check-label" for="premiumpayment">Premium:</label>
                                     <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value={{message['PREMIUMPAYMENT']}} readonly>
                                     <span class="input-group-text">HKD</span>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="premiumstructure">Premium Structure:</label>
                                     <input class="form-control" type="text" id="premiumstructure" name="premiumstructure" value={{message['PREMIUMSTRUCTURE']}} readonly>
-                                </div>
-
+                                </li>
+                        </ul>
                         </div>
                         <div class="col-4">
+                            <ul class="wrapper">
                             <h2> Customer Information </h2>
-                                <div class="input-group mb-3">
+                            <li class="form-row">
                                     <label class=form-check-label" for="cust_id">Customer ID:</label>
                                     <input class="form-control" type="text" id="cust_id" name="cust_id" value={{message['CUSTOMERID']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="cust_name">Name:</label>
                                     <input class="form-control" type="text" id="cust_name" name="cust_name" value={{message['CUSTOMERNAME']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="gender">Gender:</label>
                                     <input class="form-control" type="text" id="gender" name="gender" value={{message['GENDER']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="dob">Date of birth:</label>
                                     <input class="form-control" type="text" id="dob" name="dob" value={{message['DOB']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="country">Country:</label>
                                     <input class="form-control" type="text" id="country" name="country" value={{message['COUNTRY']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="email">Email:</label>
                                     <input class="form-control" type="text" id="email" name="email" value={{message['EMAIL']}} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="smoking_status">Smoker:</label>
                                     <input class="form-control" type="text" id="smoking_status" name="smoking_status" value={% if message['SMOKING_STATUS'] %} Yes {% else %} No {% endif %} readonly>
-                                </div>
-                                <div class="input-group mb-3">
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="customer_status">Customer Status:</label>
                                     <input class="form-control" type="text" id="customer_status" name="customer_status" value={{message['CUSTOMER_STATUS']}} readonly>
-                                </div>
+                                </li>
 
                         </div>
-                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                            <textarea class="form-control" rows = "3" cols="10"  name = "reason" placeholder="Please explain the reason of the underwriting decision..."></textarea>
+                        <div class="justify-content-sm-center">
+                            <textarea class="form-control" rows = "3" cols="5"  name = "reason" placeholder="Please explain the reason of the underwriting decision..."></textarea>
                         </div>
                         <br>
                         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                             <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
                             <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
                         </div>
+                    </ul>
                     </div>
                 </div>
                 <!--
