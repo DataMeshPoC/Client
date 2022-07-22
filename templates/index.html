@@ -1,12 +1,16 @@
-<!-- This page renders prospective customers, one at a time, for approval -->
 {% extends "layout.html" %}
-
-{% block title %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{ url_for('stylesheet', filename='/static/bootstrap.css') }}" />
+    {% block title %}
     Index
 {% endblock %}
 
 {% block main %}
 <style>
+    
     .wrapper {
       background-color: bg-light;
       list-style-type: none;
@@ -34,13 +38,16 @@
      color: white;
      border: 0;
     }
+
 </style>
-    <div class="container py-5 text-center">
+</head>
+<body class="">
+    <div class="container py-5 kpmg-blue-bg text-center">
         <main>
         {% for message in messages %}
         <form action="/" method="POST" id="form" >
             <div class="text-center">
-                <h2 class="display-5 fw-bold">Prospective Customer Information:</h1>
+                <h1>Prospective Customer Information:</h1>
                 <br>           
                 <div class="container" id="first_div">
                     <div class="row justify-content-center">
@@ -119,10 +126,10 @@
                         </div>
                         <br>
                         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                            <button type="submit" name="Accept" id="Accept" class="btn btn-primary btn-lg px-4 gap-3" >Accept</button>
-                            <button type="submit" name="Decline" id="Decline" class="btn btn-outline-secondary btn-lg px-4">Decline</button>
+                            <button type="submit" name="Accept" id="Accept" class="btn-lg btn-success" >Accept</button>
+                            <button type="submit" name="Decline" id="Decline" class="btn-lg btn-secondary">Decline</button>
                         </div>
-                    </ul>
+                        </ul>
                     </div>
                 </div>
     
@@ -142,4 +149,6 @@
         <hr>
         {% endfor %}
 </main>
+</body>
+</html>
 {% endblock %}

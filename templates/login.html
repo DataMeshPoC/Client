@@ -8,6 +8,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/static/bootstrap.css" rel="stylesheet">
 <style>
 body {font-family: Arial, Helvetica, sans-serif;}
 
@@ -22,15 +23,6 @@ input[type=text], input[type=password] {
 }
 
 /* Set a style for all buttons */
-button {
-  background-color: #0275d8;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
 
 button:hover {
   opacity: 0.8;
@@ -72,7 +64,7 @@ span.psw {
 .modal-content {
   background-color: #fefefe;
   margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-  border: 1px solid #888;
+  border: 1px solid #005e88;
   width: 80%; /* Could be more or less, depending on screen size */
 }
 
@@ -120,11 +112,11 @@ span.psw {
 }
 </style>
 </head>
-<body class="centered">
-
-<h2>Underwriting Application Login</h2>
-<p>Please sign in to approve or decline incoming applications in real-time. </p>
-
+<body class="kpmg-blue-bg">
+  <div class="card kpmg-lightblue-bg">
+    <div class="card-body">
+      <h1 class="card-title">Underwriting Application Login</h1>
+      <p>Please sign in to approve or decline incoming applications in real-time.</p>
 <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
 <div id="id01" class="modal">
@@ -133,9 +125,10 @@ span.psw {
 
     <div class="container">
       <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="emailS" id="email" name="email" autocomplete="off">
-      <label for="email">Email address</label>
+      <label for="email" class="kpmg-text">Email address</label>
+      <br>
   </div>
-  <button class="w-100 btn btn-lg btn-primary" name="login" id="login" type="submit">Log In</button>
+  <button class="btn btn-lg btn-primary" name="login" id="login" type="submit">Log In</button>
       <label>
         <input type="checkbox" checked="checked" name="remember"> Remember me
       </label>
