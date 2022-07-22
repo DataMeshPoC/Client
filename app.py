@@ -175,8 +175,9 @@ def index():
             'policy_id': int(request.form.get('policy_id'))
         }
 
+        # If the submit button is clicked
         if 'Accept' in request.form:
-            # If policy is approved, Prospect become a Customer
+            # If policy is approved, Prospect becomes a Customer
             status = {
                 'policy_status': 'Approved',
                 'customer_status': True
@@ -200,11 +201,13 @@ def index():
         # Consume from policy draft list topic
         
         def basic_consume_loop(consumer, topics, avroSerde):
+            # Initialize an empty list to create a list of dictionaries
             messages = []
             try:
                 consumer.subscribe(topics)
 
                 while True:
+                    # Define frequency at which they poll for messages
                     msg = consumer.poll(timeout=1.0)
                     if msg is None:
                         continue
@@ -212,7 +215,7 @@ def index():
                         print('Consumer error: {}'.format(msg.error()))
                         continue
                     else:
-                        # using avro parser here
+                        # Using avro parser here
                         if msg.value() is not None:
                             v = avroSerde.deserialize(msg.value())
                             k = struct.unpack('>i', msg.key())
@@ -226,6 +229,7 @@ def index():
         def client_consumed():
             # topic name used by parser
             KAFKA_TOPIC = "PolicyDraftList"
+            # Consumer configs
             consumer = Consumer({
                 'bootstrap.servers': 'pkc-epwny.eastus.azure.confluent.cloud:9092',
                 'security.protocol': 'SASL_SSL',
@@ -244,11 +248,13 @@ def index():
             return basic_consume_loop(consumer, ["PolicyDraftList"], avroSerde)
 
 
-        # Store the dict from the consumer call
+        # Store the dict from the consumer call, parse the list of dictionaries
+        # in the index
         messages = client_consumed()
 
         return render_template("index.html", messages=messages)
 
+# Define function to print error message and code
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
