@@ -8,7 +8,7 @@
 {% block main %}
 <style>
     .wrapper {
-      background-color: whitesmoke;
+      background-color: bg-light;
       list-style-type: none;
       padding: 0;
       border-radius: 4px;
@@ -35,8 +35,8 @@
      border: 0;
     }
 </style>
-<main>
     <div class="container py-5 text-center">
+        <main>
         {% for message in messages %}
         <form action="/" method="POST" id="form" >
             <div class="text-center">
@@ -69,8 +69,7 @@
                                 </li>
                                 <li class="form-row">
                                     <label class="form-check-label" for="premiumpayment">Premium:</label>
-                                    <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value={{message['PREMIUMPAYMENT']}} readonly>
-                                    <span class="input-group-text">HKD</span>
+                                    <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value= "{{ message['PREMIUMPAYMENT']}} HKD" readonly >
                                 </li>
                                 <li class="form-row">
                                     <label class=form-check-label" for="premiumstructure">Premium Structure:</label>
@@ -80,7 +79,7 @@
                         </div>
                         <div class="col-4">
                             <ul class="wrapper">
-                            <h2> Customer Information </h2>
+                            <h3> Customer Information </h3>
                             <li class="form-row">
                                     <label class=form-check-label" for="cust_id">Customer ID:</label>
                                     <input class="form-control" type="text" id="cust_id" name="cust_id" value={{message['CUSTOMERID']}} readonly>
@@ -115,7 +114,7 @@
                                 </li>
 
                         </div>
-                        <div class="justify-content-sm-center">
+                        <div class="justify-content-sm-center col-md-8 mb-3">
                             <textarea class="form-control" rows = "3" cols="5"  name = "reason" placeholder="Please explain the reason of the underwriting decision..."></textarea>
                         </div>
                         <br>
@@ -126,6 +125,7 @@
                     </ul>
                     </div>
                 </div>
+    
                 <!--
                 <script>
                 function myFunction() {
@@ -134,8 +134,9 @@
                     document.getElementById("first_div" ).style.visibility = "visible";
                 return false;
                 }
-                -->
                 </script>
+                -->
+              <br>  
             </div>
         </form>
         <hr>
