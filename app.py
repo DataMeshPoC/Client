@@ -203,6 +203,8 @@ def index():
         def basic_consume_loop(consumer, topics, avroSerde):
             # Initialize an empty list to create a list of dictionaries
             messages = []
+            # Initialize a variable to count the number of tombstone messages
+            tombstone = 0
             try:
                 consumer.subscribe(topics)
 
@@ -216,17 +218,21 @@ def index():
                         continue
                     else:
                         # Using avro parser here
-                        if msg.value() is not None:
+                        if msg.value() is not None and msg.key() != 'b18':
                             v = avroSerde.deserialize(msg.value())
                             k = struct.unpack('>i', msg.key())
-                            running = False
                             v.update({'POLICYID': k[0]})
                             messages.append(v)
-                        else: 
-                            consumer.commit()
-                            
+                        if msg.key() != 'b18':
+                            tombstone += 1
+                            print(msg)
+                        
+                        if tombstone > 8: 
+                            running = False
             finally:
                 return(messages)
+                
+                
 
         def client_consumed():
             # topic name used by parser
@@ -254,6 +260,7 @@ def index():
         # Store the dict from the consumer call, parse the list of dictionaries
         # in the index
         messages = client_consumed()
+        print(messages)
 
         return render_template("index.html", messages=messages)
 

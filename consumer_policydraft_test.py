@@ -17,11 +17,13 @@ import traceback
 # mainly taken from https://docs.confluent.io/kafka-clients/python/current/overview.html#id1
 def basic_consume_loop(consumer, topics, avroSerde):
     running = True
+    count = 0
     try:
         consumer.subscribe(topics)
 
         while running:
             msg = consumer.poll(timeout=1.0)
+            print(msg)
             if msg is None:
                 continue
             if msg.error():
@@ -29,14 +31,26 @@ def basic_consume_loop(consumer, topics, avroSerde):
                 continue
             else:
                 # using avro parser here
-                if msg.value() is not None:
+                
+                print(msg.key(), msg.offset())
+                print(msg.value()) 
+                if msg.value() is not None and msg.key() != b'18':
+                    # define the end of the loop after a certain number of nones
+                    # reset after 5 seconds, we flush 
                     v = avroSerde.deserialize(msg.value())
-                     
-                else: 
-                    consumer.commit() 
+                    print(v)
+                
+                if msg.key() != b'18':
+                    count +=1 
+                
+                print(count)
+                if count > 8: 
+                    running = False
+                
+                
     finally:
-        running = False
         consumer.close()
+        return(v)
 
 
 def main():
