@@ -31,10 +31,9 @@ def basic_consume_loop(consumer, topics, avroSerde):
                 # using avro parser here
                 if msg.value() is not None:
                     v = avroSerde.deserialize(msg.value())
-                    k = struct.unpack('>i', msg.key())  
-                    EMAIL = v['EMAIL'].split("\n")
-                    print(v)
-                    
+                     
+                else: 
+                    consumer.commit() 
     finally:
         running = False
         consumer.close()
@@ -48,7 +47,8 @@ def main():
         'sasl.username': 'IHO7XVPCJCCBZAYX',
         'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
         'group.id': str(uuid.uuid1()),  # just generating a groupid, can be replaced by a specific one
-        'auto.offset.reset': 'earliest'
+        'auto.offset.reset': 'earliest',
+        'auto.commit.interval.ms': '5000'
     })
 
     # topic name used by parser
