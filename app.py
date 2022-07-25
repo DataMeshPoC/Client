@@ -222,6 +222,8 @@ def index():
                             running = False
                             v.update({'POLICYID': k[0]})
                             messages.append(v)
+                        else: 
+                            consumer.commit()
                             
             finally:
                 return(messages)
@@ -237,6 +239,7 @@ def index():
                 'sasl.username': 'IHO7XVPCJCCBZAYX',
                 'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
                 'group.id': str(uuid.uuid1()),  # just generating a groupid, can be replaced by a specific one
+                'auto.commit.interval.ms': '5000',
                 'auto.offset.reset': 'earliest'
             })
             registry_client = SchemaRegistry(
