@@ -229,6 +229,8 @@ def index():
                         
                         if tombstone > 8: 
                             running = False
+                        else: 
+                            running = False
             finally:
                 return(messages)
                 
