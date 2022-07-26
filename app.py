@@ -1,6 +1,6 @@
 import os
 import logging
-from threading import Thread, Event
+from threading import Event
 import uuid  # for consumer group
 import struct
 import datetime
@@ -156,7 +156,6 @@ def index():
             producer.flush()
 
         # Get UW result data
-        print('Result FORM: ')
         uw_result = {
             'term': request.form.get('policy_term'),
             'premiumpayment': request.form.get('premiumpayment'),
@@ -182,8 +181,6 @@ def index():
                 'policy_status': 'Approved',
                 'customer_status': True
             }
-            print(uw_result)
-            print(status)
             producer(uw_result, status)
 
             return render_template("accept.html")
@@ -203,36 +200,41 @@ def index():
         def basic_consume_loop(consumer, topics, avroSerde):
             # Initialize an empty list to create a list of dictionaries
             messages = []
-            # Initialize a variable to count the number of tombstone messages
-            tombstone = 0
+            # Initialize a variable to count the number of 'None' messages
+            waiting_cnt = 0
+            threshold_cnt = 15  # can be updated if required
+            running = True
+
             try:
                 consumer.subscribe(topics)
 
-                while True:
+                while running:
                     # Define frequency at which they poll for messages
                     msg = consumer.poll(timeout=1.0)
+
                     if msg is None:
+                        waiting_cnt += 1
+                        if waiting_cnt > threshold_cnt:
+                            # If threshold is reached - exit the loop
+                            running = False
                         continue
                     if msg.error():
                         print('Consumer error: {}'.format(msg.error()))
                         continue
                     else:
+                        print(msg.key())
+                        # reset counter
+                        waiting_cnt = 0
                         # Using avro parser here
-                        if msg.value() is not None and msg.key() != 'b18':
+                        if msg.value() is not None and msg.key() != b'18':
                             v = avroSerde.deserialize(msg.value())
                             k = struct.unpack('>i', msg.key())
                             v.update({'POLICYID': k[0]})
                             messages.append(v)
-                        if msg.key() != 'b18':
-                            tombstone += 1
-                            print(msg)
-                        
-                        if tombstone > 8: 
-                            running = False
+
             finally:
-                return(messages)
-                
-                
+                consumer.close()
+                return messages
 
         def client_consumed():
             # topic name used by parser
@@ -245,7 +247,7 @@ def index():
                 'sasl.username': 'IHO7XVPCJCCBZAYX',
                 'sasl.password': 'UAwjmSIn5xuAL7HZmBjU4NGt0nLfXbyjtlVA7imgCdGBYFkog5kw0gc4e5MYmiUE',
                 'group.id': str(uuid.uuid1()),  # just generating a groupid, can be replaced by a specific one
-                'auto.commit.interval.ms': '5000',
+                # 'auto.commit.interval.ms': '5000',
                 'auto.offset.reset': 'earliest'
             })
             registry_client = SchemaRegistry(
@@ -254,8 +256,7 @@ def index():
                 headers={"Content-Type": "application/vnd.schemaregistry.v1+json"},
             )
             avroSerde = AvroValueSerde(registry_client, KAFKA_TOPIC)
-            return basic_consume_loop(consumer, ["PolicyDraftList"], avroSerde)
-
+            return basic_consume_loop(consumer, [KAFKA_TOPIC], avroSerde)
 
         # Store the dict from the consumer call, parse the list of dictionaries
         # in the index
@@ -263,6 +264,7 @@ def index():
         print(messages)
 
         return render_template("index.html", messages=messages)
+
 
 # Define function to print error message and code
 def errorhandler(e):
