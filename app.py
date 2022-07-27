@@ -117,7 +117,7 @@ def index():
                 PREMIUMSTRUCTURE=uw_result['premiumstructure'],
                 POLICYSTATUS=status['policy_status'],
                 REASON=uw_result['reason'],
-                UWTIME=now.strftime("%Y-%m-%d:%H"),
+                UWTIME=now.strftime("%Y-%m-%d:%H%M"),
                 CUSTOMERNAME=uw_result['cust_name'],
                 CUSTOMERID= uw_result['cust_id'],
                 GENDER=uw_result['gender'],
