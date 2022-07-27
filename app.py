@@ -119,7 +119,7 @@ def index():
                 REASON=uw_result['reason'],
                 BUYTIME=uw_result['buytime'],
                 # Added minutes to the timestamp 
-                UWTIME=now.strftime("%Y-%m-%d:%H:%M"),
+                UWTIME=now.strftime("%Y-%m-%d %H:%M:%S"),
                 CUSTOMERNAME=uw_result['cust_name'],
                 CUSTOMERID= uw_result['cust_id'],
                 GENDER=uw_result['gender'],
