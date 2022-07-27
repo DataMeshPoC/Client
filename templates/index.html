@@ -75,6 +75,10 @@
                                     <input class="form-control" type="text" id="policy_desc" name="policy_desc" value={{message['POLICYDESCRIPTION']}} readonly>
                                 </li>
                                 <li class="form-row">
+                                    <label class=form-check-label" for="buytime">Buy Time:</label>
+                                    <input class="form-control" type="text" id="buytime" name="buytime" value={{message['BUYTIME']}} readonly>
+                                </li>
+                                <li class="form-row">
                                     <label class="form-check-label" for="premiumpayment">Premium:</label>
                                     <div class="col-6">
                                     <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value={{ message['PREMIUMPAYMENT']}} readonly >
@@ -117,10 +121,6 @@
                                 <li class="form-row">
                                     <label class=form-check-label" for="smoking_status">Smoker:</label>
                                     <input class="form-control" type="text" id="smoking_status" name="smoking_status" value={% if message['SMOKING_STATUS'] %} Yes {% else %} No {% endif %} readonly >
-                                </li>
-                                <li class="form-row">
-                                    <label class=form-check-label" for="buytime">Buy Time:</label>
-                                    <input class="form-control" type="text" id="buytime" name="buytime" value={{message['BUYTIME']}} readonly>
                                 </li>
                                 <li class="form-row">
                                     <label class=form-check-label" for="customer_status">Customer Status:</label>
