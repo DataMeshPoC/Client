@@ -52,8 +52,8 @@
                 <div class="container" id="first_div">
                     <div class="row justify-content-center">
                         <div class="col-4">
-                        <ul class="wrapper">
-                            <h3> Policy Information </h2>
+                            <ul class="wrapper">
+                            <h3> Policy Information </h3>
                                 <li class="form-row">
                                     <label class=form-check-label" for="policy_id">ID:</label>
                                     <input class="form-control" type="text" id="policy_id" name="policy_id" value={{message['POLICYID']}} readonly>
@@ -85,12 +85,12 @@
                                     <label class=form-check-label" for="premiumstructure">Premium Structure:</label>
                                     <input class="form-control" type="text" id="premiumstructure" name="premiumstructure" value={{message['PREMIUMSTRUCTURE']}} readonly>
                                 </li>
-                        </ul>
+                            </ul>
                         </div>
                         <div class="col-4">
                             <ul class="wrapper">
                             <h3> Customer Information </h3>
-                            <li class="form-row">
+                                <li class="form-row">
                                     <label class=form-check-label" for="cust_id">Customer ID:</label>
                                     <input class="form-control" type="text" id="cust_id" name="cust_id" value={{message['CUSTOMERID']}} readonly>
                                 </li>
@@ -112,11 +112,11 @@
                                 </li>
                                 <li class="form-row">
                                     <label class=form-check-label" for="email">Email:</label>
-                                    <input class="form-control" type="text" id="email" name="email" value={{message['EMAIL']}} readonly>
+                                    <input class="form-control" type="text" id="email" name="email" value={{message['EMAIL']}} readonly >
                                 </li>
                                 <li class="form-row">
                                     <label class=form-check-label" for="smoking_status">Smoker:</label>
-                                    <input class="form-control" type="text" id="smoking_status" name="smoking_status" value={% if message['SMOKING_STATUS'] %} Yes {% else %} No {% endif %} readonly>
+                                    <input class="form-control" type="text" id="smoking_status" name="smoking_status" value={% if message['SMOKING_STATUS'] %} Yes {% else %} No {% endif %} readonly >
                                 </li>
                                 <li class="form-row">
                                     <label class=form-check-label" for="buytime">Buy Time:</label>
@@ -126,7 +126,7 @@
                                     <label class=form-check-label" for="customer_status">Customer Status:</label>
                                     <input class="form-control" type="text" id="customer_status" name="customer_status" value={% if message['CUSTOMER_STATUS'] %} Yes {% else %} No {% endif %} readonly>
                                 </li>
-
+                            </ul>
                         </div>
                         <div class="justify-content-sm-center col-md-8 mb-3">
                             <textarea class="form-control" rows = "3" cols="5"  name = "reason" placeholder="Please explain the reason of the underwriting decision..."></textarea>
@@ -136,7 +136,7 @@
                             <button type="submit" name="Accept" id="Accept" class="btn-lg btn-success" >Accept</button>
                             <button type="submit" name="Decline" id="Decline" class="btn-lg btn-secondary">Decline</button>
                         </div>
-                        </ul>
+
                     </div>
                 </div>
               <br>  
@@ -144,7 +144,8 @@
         </form>
         <hr>
         {% endfor %}
-</main>
+        </main>
+    </div>
 </body>
 </html>
 {% endblock %}
