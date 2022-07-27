@@ -76,7 +76,10 @@
                                 </li>
                                 <li class="form-row">
                                     <label class="form-check-label" for="premiumpayment">Premium:</label>
-                                    <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value= "{{ message['PREMIUMPAYMENT']}} HKD" readonly >
+                                    <div class="col-6">
+                                    <input class="form-control" type="text" id="premiumpayment" name="premiumpayment" value={{ message['PREMIUMPAYMENT']}} readonly >
+                                </div>
+                                    <span class="input-group-text">HKD</span>
                                 </li>
                                 <li class="form-row">
                                     <label class=form-check-label" for="premiumstructure">Premium Structure:</label>
@@ -116,8 +119,12 @@
                                     <input class="form-control" type="text" id="smoking_status" name="smoking_status" value={% if message['SMOKING_STATUS'] %} Yes {% else %} No {% endif %} readonly>
                                 </li>
                                 <li class="form-row">
+                                    <label class=form-check-label" for="buytime">Buy Time:</label>
+                                    <input class="form-control" type="text" id="buytime" name="buytime" value={{message['BUYTIME']}} readonly>
+                                </li>
+                                <li class="form-row">
                                     <label class=form-check-label" for="customer_status">Customer Status:</label>
-                                    <input class="form-control" type="text" id="customer_status" name="customer_status" value={{message['CUSTOMER_STATUS']}} readonly>
+                                    <input class="form-control" type="text" id="customer_status" name="customer_status" value={% if message['CUSTOMER_STATUS'] %} Yes {% else %} No {% endif %} readonly>
                                 </li>
 
                         </div>

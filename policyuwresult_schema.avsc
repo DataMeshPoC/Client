@@ -83,6 +83,14 @@
     },
     {
       "default": null,
+      "name": "BUYTIME",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
       "name": "CUSTOMERID",
       "type": [
         "null",

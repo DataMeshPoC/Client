@@ -1,0 +1,20 @@
+schema
+
+API key:
+
+43EV26QTDLE26FWD
+
+API secret:
+
+OFCaxYa3QQmoBU+TMpiKQrOFE43dRXVCy8iR0YsjTZf9NILxzSYcMpXy/d3t1ymp
+
+CLUSTER
+ 
+
+API key:
+
+G43OXASWELV233ID
+
+API secret:
+
+6AqiTiagib5OMxCcusHqevMihIhFbJBQ5VUEvjHeD9jYySLv/DQgkHuRXkV+t4sV
