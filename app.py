@@ -118,7 +118,8 @@ def index():
                 POLICYSTATUS=status['policy_status'],
                 REASON=uw_result['reason'],
                 BUYTIME=uw_result['buytime'],
-                UWTIME=now.strftime("%Y-%m-%d:%H"),
+                # Added minutes to the timestamp 
+                UWTIME=now.strftime("%Y-%m-%d:%H:%M"),
                 CUSTOMERNAME=uw_result['cust_name'],
                 CUSTOMERID= uw_result['cust_id'],
                 GENDER=uw_result['gender'],
@@ -128,6 +129,8 @@ def index():
                 SMOKING_STATUS=uw_result['smoking_status'],
                 CUSTOMER_STATUS=status['customer_status']
             )
+
+            
             key = uw_result['policy_id']
 
             sr = SchemaRegistryClient({
