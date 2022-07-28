@@ -1,15 +1,10 @@
-click==7.1.2
 confluent-kafka==0.11.4
 kafka-python==2.0.2
-itsdangerous==1.1.0
 Python==3.9.13
 Flask==2.1.2
 Flask-Session
 Werkzeug==2.1.2
 Jinja2==2.11.2
-MarkupSafe==1.1.1
-email-validator==1.1.2
 Flask-WTF==0.14.3
-numpy==1.14.1
 
 # export FLASK_ENV="DEVELOPMENT"
