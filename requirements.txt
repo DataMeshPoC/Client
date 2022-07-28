@@ -1,8 +1,9 @@
 confluent-kafka
 kafka-python
-Python
 Flask
 Flask-Session
 Werkzeug
 Jinja2
+requests
 confluent_avro
+fastavro
