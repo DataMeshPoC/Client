@@ -7,15 +7,9 @@ Flask==2.1.2
 Flask-Session
 Werkzeug==2.1.2
 Jinja2==2.11.2
-kafka-python==1.4.1
-kazoo==2.4.0
 MarkupSafe==1.1.1
-WTForms==2.3.3
 email-validator==1.1.2
 Flask-WTF==0.14.3
 numpy==1.14.1
-six==1.11.0
-tabulate==0.8.2
-wheel==0.26.0
 
 # export FLASK_ENV="DEVELOPMENT"
