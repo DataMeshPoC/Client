@@ -5,6 +5,5 @@ Flask==2.1.2
 Flask-Session
 Werkzeug==2.1.2
 Jinja2==2.11.2
-Flask-WTF==0.14.3
 
 # export FLASK_ENV="DEVELOPMENT"
