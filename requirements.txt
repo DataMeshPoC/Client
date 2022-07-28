@@ -2,9 +2,10 @@ click==7.1.2
 confluent-kafka==0.11.4
 kafka-python==2.0.2
 itsdangerous==1.1.0
-Python 3.9.13
-Flask 2.1.2
-Werkzeug 2.1.2
+Python==3.9.13
+Flask==2.1.2
+Flask-Session
+Werkzeug==2.1.2
 Jinja2==2.11.2
 kafka-python==1.4.1
 kazoo==2.4.0
