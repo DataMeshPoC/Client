@@ -1,9 +1,8 @@
-confluent-kafka==0.11.4
-kafka-python==2.0.2
-Python==3.9.13
-Flask==2.1.2
+confluent-kafka
+kafka-python
+Python
+Flask
 Flask-Session
-Werkzeug==2.1.2
-Jinja2==2.11.2
-
-# export FLASK_ENV="DEVELOPMENT"
+Werkzeug
+Jinja2
+confluent_avro
