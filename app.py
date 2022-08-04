@@ -193,7 +193,7 @@ def index():
         if 'Decline' in request.form:
             status = {
                 'policy_status': 'Declined',
-                'customer_status': eval(request.form.get('customer_status'))
+                'customer_status': True if request.form.get('customer_status') == 'Yes' else False
             }
             producer(uw_result, status)
 
