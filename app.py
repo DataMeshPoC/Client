@@ -228,10 +228,9 @@ def index():
                         continue
                     else:
                         # Get list of tombstones messages if any
-                        if msg.value() == None and msg.key() is not None:
+                        if msg.value() is None and msg.key() is not None:
                             tomb_key = struct.unpack('>i', msg.key())
                             tombstones.append(tomb_key[0])
-                            print("TOMBSTONES:")
                             print( tombstones)
                         # Reset counter variable if a non-null message is received
                         waiting_cnt = 0
@@ -241,7 +240,6 @@ def index():
                             k = struct.unpack('>i', msg.key())
                             v.update({'POLICYID': k[0]})
                             messages.append(v)
-                            print("MESSAGES")
                             print(messages)
 
             finally:
@@ -251,7 +249,7 @@ def index():
                 latest_messages = [message for message in messages if not (message['POLICYID'] in tombstones)]
                 print("LATEST")
                 return latest_messages
-
+            
 
         def client_consumed():
             # topic name used by parser
@@ -277,6 +275,7 @@ def index():
 
         # Store the dict from the consumer call, parse the list of dictionaries in the index
         messages = client_consumed()
+        print("messages below:")
         print(messages)
 
         return render_template("index.html", messages=messages)
